@@ -8,7 +8,7 @@ export default function LoginScreen({ onLogin }) {
   const [password, setPassword] = useState("");
 
   return (
-    <View style={tw`flex-1 bg-gradient-to-br from-blue-600 to-purple-700`}>
+    <View style={tw`flex-1 bg-gradient-to-br from-blue-700 to-purple-800`}>
       <ImageBackground
         source={{ uri: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80' }}
         style={tw`flex-1 justify-center items-center`}
