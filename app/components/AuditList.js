@@ -27,12 +27,12 @@ export default function AuditList({ audits, onSelectAudit, onNavigate }) {
   return (
     <View style={tw`flex-1 bg-gray-50`}>
       {/* Header */}
-      <View style={tw`bg-gradient-to-r from-blue-600 to-purple-600 pt-12 pb-6 px-4`}>
+      <View style={tw`bg-blue-600 pt-12 pb-6 px-4`}>
         <Text style={tw`text-white text-2xl font-bold mb-2`}>
           Pending Audits
         </Text>
-        <View style={tw`bg-white bg-opacity-20 rounded-lg p-3`}>
-          <Text style={tw`text-white text-sm opacity-90`}>
+        <View style={tw`bg-blue-700 rounded-lg p-3`}>
+          <Text style={tw`text-white text-sm`}>
             Total Potential Earnings
           </Text>
           <Text style={tw`text-white text-xl font-bold`}>

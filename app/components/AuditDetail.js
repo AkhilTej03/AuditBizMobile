@@ -48,10 +48,10 @@ export default function AuditDetail({
   return (
     <View style={tw`flex-1 bg-gray-50`}>
       {/* Header */}
-      <View style={tw`bg-gradient-to-r from-blue-600 to-purple-600 pt-12 pb-6 px-4`}>
+      <View style={tw`bg-blue-600 pt-12 pb-6 px-4`}>
         <View style={tw`flex-row items-center mb-4`}>
           <TouchableOpacity
-            style={tw`bg-white bg-opacity-20 rounded-full p-2 mr-3`}
+            style={tw`bg-blue-700 rounded-full p-2 mr-3`}
             onPress={onBack}
           >
             <Text style={tw`text-white text-lg`}>←</Text>
@@ -60,21 +60,21 @@ export default function AuditDetail({
             <Text style={tw`text-white text-xl font-bold`}>
               {audit.type} Audit
             </Text>
-            <Text style={tw`text-white text-sm opacity-90`}>
+            <Text style={tw`text-white text-sm`}>
               {audit.location}
             </Text>
           </View>
         </View>
 
         {auditStarted && (
-          <View style={tw`bg-white bg-opacity-20 rounded-lg p-3`}>
+          <View style={tw`bg-blue-700 rounded-lg p-3`}>
             <View style={tw`flex-row justify-between items-center mb-2`}>
               <Text style={tw`text-white text-sm`}>Progress</Text>
               <Text style={tw`text-white text-sm font-bold`}>
                 {answeredQuestions}/{totalQuestions}
               </Text>
             </View>
-            <View style={tw`bg-white bg-opacity-30 rounded-full h-2`}>
+            <View style={tw`bg-blue-800 rounded-full h-2`}>
               <View 
                 style={[
                   tw`bg-white rounded-full h-2`,
@@ -117,13 +117,13 @@ export default function AuditDetail({
           ))}
           
           <TouchableOpacity
-            style={tw`bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-4 mt-4 mb-8 shadow-lg ${answeredQuestions < totalQuestions ? 'opacity-50' : ''}`}
+            style={tw`bg-green-600 rounded-2xl p-4 mt-4 mb-8 shadow-lg ${answeredQuestions < totalQuestions ? 'opacity-50' : ''}`}
             onPress={handleSubmitAudit}
           >
             <Text style={tw`text-white text-center font-bold text-lg`}>
               Submit Audit ✓
             </Text>
-            <Text style={tw`text-white text-center text-sm opacity-90 mt-1`}>
+            <Text style={tw`text-white text-center text-sm mt-1`}>
               Earn ₹{audit.expectedPayout}
             </Text>
           </TouchableOpacity>
@@ -168,13 +168,13 @@ export default function AuditDetail({
             </View>
 
             <TouchableOpacity
-              style={tw`bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-4 shadow-lg`}
+              style={tw`bg-blue-600 rounded-2xl p-4 shadow-lg`}
               onPress={() => setModalVisible(true)}
             >
               <Text style={tw`text-white text-center font-bold text-lg`}>
                 Ready for Audit
               </Text>
-              <Text style={tw`text-white text-center text-sm opacity-90 mt-1`}>
+              <Text style={tw`text-white text-center text-sm mt-1`}>
                 Click when you arrive at location
               </Text>
             </TouchableOpacity>

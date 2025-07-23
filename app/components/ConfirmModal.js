@@ -37,7 +37,7 @@ export default function ConfirmModal({ visible, onConfirm, onCancel, title, mess
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={tw`bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-4 flex-1`}
+              style={tw`bg-blue-600 rounded-2xl p-4 flex-1`}
               onPress={onConfirm}
             >
               <Text style={tw`text-white text-center font-bold`}>
