@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { View, Text } from "react-native";
 import tw from "twrnc";
@@ -101,13 +100,39 @@ const dummyPayouts = [
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null); // Added to store user data
+  const [authToken, setAuthToken] = useState(null); // Added to store token
   const [currentScreen, setCurrentScreen] = useState("audits");
   const [selectedAudit, setSelectedAudit] = useState(null);
   const [answers, setAnswers] = useState({});
   const [audits, setAudits] = useState(dummyAudits);
 
-  const handleLogin = () => {
-    setIsLoggedIn(true);
+  // Handler for successful login
+  const handleLogin = async (email, password) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/auth/login', { // Assuming your backend is running on localhost:3000
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Login successful, store user data and token
+        setCurrentUser(data.user);
+        setAuthToken(data.token);
+        setIsLoggedIn(true);
+      } else {
+        // Handle login errors (e.g., invalid credentials, user not approved)
+        alert(`Login failed: ${data.error || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('An error occurred during login. Please try again.');
+    }
   };
 
   const handleScreenChange = (screen) => {
@@ -125,7 +150,7 @@ export default function App() {
             : audit
         )
       );
-      
+
       // Clear answers and go back
       setAnswers({});
       setSelectedAudit(null);
@@ -134,6 +159,7 @@ export default function App() {
   };
 
   if (!isLoggedIn) {
+    // Pass the handleLogin function as a prop to LoginScreen
     return <LoginScreen onLogin={handleLogin} />;
   }
 
