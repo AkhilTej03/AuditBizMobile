@@ -21,16 +21,24 @@ const getStatusColor = (status) => {
   }
 };
 
-export default function AuditList({ audits, onSelectAudit, onNavigate }) {
+export default function AuditList({ audits, onSelectAudit, onNavigate, onLogout }) {
   const totalEarnings = audits.reduce((sum, audit) => sum + audit.expectedPayout, 0);
 
   return (
     <View style={tw`flex-1 bg-gray-50`}>
       {/* Header */}
       <View style={tw`bg-blue-600 pt-12 pb-6 px-4`}>
-        <Text style={tw`text-white text-2xl font-bold mb-2`}>
-          Pending Audits
-        </Text>
+        <View style={tw`flex-row justify-between items-center mb-2`}>
+          <Text style={tw`text-white text-2xl font-bold`}>
+            Pending Audits
+          </Text>
+          <TouchableOpacity
+            style={tw`bg-red-500 rounded-lg px-3 py-2`}
+            onPress={onLogout}
+          >
+            <Text style={tw`text-white font-bold text-sm`}>Logout</Text>
+          </TouchableOpacity>
+        </View>
         <View style={tw`bg-blue-700 rounded-lg p-3`}>
           <Text style={tw`text-white text-sm`}>
             Total Potential Earnings

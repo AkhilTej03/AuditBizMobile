@@ -1,4 +1,3 @@
-
 import React from "react";
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import tw from "twrnc";
@@ -12,16 +11,32 @@ const getAuditIcon = (type) => {
   }
 };
 
-export default function CompletedAudits({ audits, onSelectAudit, onNavigate }) {
+export default function CompletedAudits({ audits, onSelectAudit, onNavigate, onLogout }) {
   const totalEarned = audits.reduce((sum, audit) => sum + audit.expectedPayout, 0);
 
   return (
     <View style={tw`flex-1 bg-gray-50`}>
       {/* Header */}
       <View style={tw`bg-purple-600 pt-12 pb-6 px-4`}>
-        <Text style={tw`text-white text-2xl font-bold mb-2`}>
-          Completed Audits
-        </Text>
+        <View style={tw`flex-row items-center justify-between mb-4`}>
+          <View style={tw`flex-row items-center`}>
+            <TouchableOpacity
+              style={tw`bg-purple-700 rounded-full p-2 mr-3`}
+              onPress={() => onNavigate("audits")}
+            >
+              <Text style={tw`text-white text-lg`}>←</Text>
+            </TouchableOpacity>
+            <Text style={tw`text-white text-2xl font-bold`}>
+              Completed Audits
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={tw`bg-red-500 rounded-lg px-3 py-2`}
+            onPress={onLogout}
+          >
+            <Text style={tw`text-white font-bold text-sm`}>Logout</Text>
+          </TouchableOpacity>
+        </View>
         <View style={tw`bg-purple-700 rounded-lg p-3`}>
           <Text style={tw`text-white text-sm`}>
             Total Earned
@@ -57,7 +72,7 @@ export default function CompletedAudits({ audits, onSelectAudit, onNavigate }) {
           <Text style={tw`text-gray-600 text-xs`}>Hotels</Text>
         </View>
       </View>
-      
+
       {/* Completed Audits List */}
       {audits.length === 0 ? (
         <View style={tw`flex-1 justify-center items-center px-4`}>
@@ -107,12 +122,12 @@ export default function CompletedAudits({ audits, onSelectAudit, onNavigate }) {
                   </View>
                 </View>
               </View>
-              
+
               <View style={tw`flex-row items-center mb-2`}>
                 <Text style={tw`text-gray-500 mr-2`}>📍</Text>
                 <Text style={tw`text-gray-700 flex-1`}>{item.location}</Text>
               </View>
-              
+
               <View style={tw`flex-row justify-between items-center mt-3 pt-3 border-t border-gray-100`}>
                 <View style={tw`flex-row items-center`}>
                   <Text style={tw`text-gray-500 mr-2`}>💰</Text>
@@ -130,7 +145,7 @@ export default function CompletedAudits({ audits, onSelectAudit, onNavigate }) {
           )}
         />
       )}
-      
+
       {/* Bottom Navigation */}
       <View style={tw`bg-white border-t border-gray-200 px-4 py-3 shadow-lg`}>
         <View style={tw`flex-row justify-between`}>

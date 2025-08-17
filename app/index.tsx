@@ -366,6 +366,29 @@ export default function App() {
     setSelectedAudit(null);
   };
 
+  const handleLogout = () => {
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to logout?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Logout", 
+          onPress: () => {
+            setIsLoggedIn(false);
+            setCurrentUser(null);
+            setAuthToken(null);
+            setUserSamikshakId(null);
+            setAudits([]);
+            setAnswers({});
+            setSelectedAudit(null);
+            setCurrentScreen("audits");
+          }
+        }
+      ]
+    );
+  };
+
   const handleAuditSubmit = async () => {
     if (selectedAudit) {
       const auditId = selectedAudit.id;
@@ -433,6 +456,7 @@ export default function App() {
           audits={audits.filter((audit) => audit.status === "Pending")}
           onSelectAudit={setSelectedAudit}
           onNavigate={handleScreenChange}
+          onLogout={handleLogout}
         />
       )}
       {currentScreen === "completed" && (
@@ -440,10 +464,11 @@ export default function App() {
           audits={audits.filter((audit) => audit.status === "Completed")}
           onSelectAudit={setSelectedAudit}
           onNavigate={handleScreenChange}
+          onLogout={handleLogout}
         />
       )}
       {currentScreen === "payouts" && (
-        <PayoutScreen payouts={dummyPayouts} onNavigate={handleScreenChange} />
+        <PayoutScreen payouts={dummyPayouts} onNavigate={handleScreenChange} onLogout={handleLogout} />
       )}
     </View>
   );

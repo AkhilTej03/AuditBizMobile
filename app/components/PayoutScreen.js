@@ -20,7 +20,7 @@ const getStatusIcon = (status) => {
   }
 };
 
-export default function PayoutScreen({ payouts, onNavigate }) {
+export default function PayoutScreen({ payouts, onNavigate, onLogout }) {
   const totalCompleted = payouts.filter(p => p.status === "Completed").reduce((sum, p) => sum + p.amount, 0);
   const totalProcessing = payouts.filter(p => p.status === "Processing").reduce((sum, p) => sum + p.amount, 0);
   const totalPending = payouts.filter(p => p.status === "Pending").reduce((sum, p) => sum + p.amount, 0);
@@ -29,9 +29,17 @@ export default function PayoutScreen({ payouts, onNavigate }) {
     <View style={tw`flex-1 bg-gray-50`}>
       {/* Header */}
       <View style={tw`bg-green-600 pt-12 pb-6 px-4`}>
-        <Text style={tw`text-white text-2xl font-bold mb-4`}>
-          Payouts Overview
-        </Text>
+        <View style={tw`flex-row justify-between items-center mb-4`}>
+          <Text style={tw`text-white text-2xl font-bold`}>
+            Payouts Overview
+          </Text>
+          <TouchableOpacity
+            style={tw`bg-red-500 rounded-lg px-3 py-2`}
+            onPress={onLogout}
+          >
+            <Text style={tw`text-white font-bold text-sm`}>Logout</Text>
+          </TouchableOpacity>
+        </View>
 
         {/* Summary Cards */}
         <View style={tw`flex-row justify-between mb-4`}>
