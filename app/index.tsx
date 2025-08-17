@@ -30,6 +30,7 @@ const transformAuditData = (apiAudits) => {
       id: item.id, // Assuming 'id' for question
       text: item.name, // Assuming 'question' is the question text
       type: item.type.toLowerCase(), // Map API type to local type
+      image_capture: item.image_capture,
       options: item.options || [], // Handle cases where options might be missing
       max: item.type === "rating" ? 5 : 5, // Assuming rating questions have a max of 10 from the example
     })),
@@ -219,21 +220,29 @@ export default function App() {
           );
           const answerData = answers[questionId];
           console.log(answerData, "AnswerData");
-          
+
           // Fix response format based on question type and answer structure
           let response;
-          if (typeof answerData === 'object' && answerData !== null) {
-            response = answerData.value || answerData.response || answerData.uri || answerData;
+          if (typeof answerData === "object" && answerData !== null) {
+            response =
+              answerData.value ||
+              answerData.response ||
+              answerData.uri ||
+              answerData;
           } else {
             response = answerData;
           }
-          
+
           return {
             checklist_item: question ? question.text : "Unknown Question",
             checklist_type: question ? question.type : "Unknown Type",
             response: response,
-            comments: (typeof answerData === 'object' && answerData?.comments) || "",
-            photo_url: (typeof answerData === 'object' && answerData?.image) ? [answerData.image] : [],
+            comments:
+              (typeof answerData === "object" && answerData?.comments) || "",
+            photo_url:
+              typeof answerData === "object" && answerData?.image
+                ? [answerData.image]
+                : [],
           };
         });
         console.log("Formatted answers:", formattedAnswers);
@@ -303,7 +312,9 @@ export default function App() {
       )}
       {currentScreen === "completed" && (
         <CompletedAudits
-          audits={audits.filter((audit) => audit.status === "Completed" || audit.status === "completed")}
+          audits={audits.filter(
+            (audit) => audit.status?.toLowerCase() === "completed",
+          )}
           onSelectAudit={setSelectedAudit}
           onNavigate={handleScreenChange}
           onLogout={handleLogout}
