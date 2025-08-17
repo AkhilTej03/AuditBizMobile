@@ -5,6 +5,7 @@ import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import tw from "twrnc";
 import { uploadImageToSupabase } from "../utils/supabase";
+import { uploadImageToS3 } from "../utils/s3Upload";
 
 export default function AuditQuestion({ question, answer, setAnswer, questionNumber }) {
   const [uploading, setUploading] = React.useState(false);
@@ -34,7 +35,17 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
   const uploadImage = async (imageUri) => {
     try {
       setUploading(true);
-      const imageUrl = await uploadImageToSupabase(imageUri, `question_${question.id}_${Date.now()}.jpg`);
+      let imageUrl;
+      
+      // Try Supabase first, fallback to S3 if it fails
+      try {
+        imageUrl = await uploadImageToSupabase(imageUri, `question_${question.id}_${Date.now()}.jpg`);
+        console.log('Supabase upload successful');
+      } catch (supabaseError) {
+        console.log('Supabase upload failed, trying S3 fallback:', supabaseError.message);
+        imageUrl = await uploadImageToS3(imageUri, `question_${question.id}_${Date.now()}.jpg`);
+        console.log('S3 fallback upload successful');
+      }
       
       if (question.image_capture) {
         setAnswer({
