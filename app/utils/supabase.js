@@ -28,13 +28,16 @@ export const uploadImageToSupabase = async (imageUri, fileName) => {
     const timestamp = Date.now();
     const uniqueFileName = `${timestamp}_${fileName || 'image.jpg'}`;
     
-    // Upload to Supabase storage with additional options
+    // Convert blob to ArrayBuffer for Supabase
+    const arrayBuffer = await blob.arrayBuffer();
+    const uint8Array = new Uint8Array(arrayBuffer);
+    
+    // Upload to Supabase storage
     const { data, error } = await supabase.storage
       .from('img')
-      .upload(uniqueFileName, blob, {
+      .upload(uniqueFileName, uint8Array, {
         contentType: blob.type || 'image/jpeg',
-        upsert: false,
-        duplex: 'half'
+        upsert: false
       });
 
     if (error) {
@@ -56,3 +59,6 @@ export const uploadImageToSupabase = async (imageUri, fileName) => {
     throw error;
   }
 };
+
+// Default export to fix the warning
+export default { supabase, uploadImageToSupabase };

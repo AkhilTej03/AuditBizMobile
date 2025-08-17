@@ -12,7 +12,7 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
 
   const handleImagePick = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: [ImagePicker.MediaType.Images],
       quality: 0.8,
       allowsEditing: true,
     });
@@ -23,7 +23,7 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
 
   const handleCameraCapture = async () => {
     const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: [ImagePicker.MediaType.Images],
       quality: 0.8,
       allowsEditing: true,
     });

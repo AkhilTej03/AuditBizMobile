@@ -16,26 +16,24 @@ export const uploadImageToS3 = async (imageUri, fileName) => {
     const timestamp = Date.now();
     const uniqueFileName = `${timestamp}_${fileName || 'image.jpg'}`;
     
-    // S3-compatible endpoint
-    const s3Endpoint = 'https://zbdohbtpivctvqmnxphd.storage.supabase.co/storage/v1/s3';
-    const bucketName = 'img';
+    // Use the correct Supabase storage API endpoint
+    const uploadUrl = `https://zbdohbtpivctvqmnxphd.supabase.co/storage/v1/object/img/${uniqueFileName}`;
     
-    // Create FormData for S3 upload
-    const formData = new FormData();
-    formData.append('file', blob, uniqueFileName);
-    
-    // Upload using S3 protocol
-    const uploadResponse = await fetch(`${s3Endpoint}/${bucketName}/${uniqueFileName}`, {
-      method: 'PUT',
+    // Upload using the storage API
+    const uploadResponse = await fetch(uploadUrl, {
+      method: 'POST',
       body: blob,
       headers: {
         'Content-Type': blob.type || 'image/jpeg',
-        'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpiZG9oYnRwaXZjdHZxbW54cGhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMyNTM3OTYsImV4cCI6MjA2ODgyOTc5Nn0.Wy9IrkjDesWC_8ON_SG9U5TqMvMHlvPfdNwiKRChsfw`
+        'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpiZG9oYnRwaXZjdHZxbW54cGhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMyNTM3OTYsImV4cCI6MjA2ODgyOTc5Nn0.Wy9IrkjDesWC_8ON_SG9U5TqMvMHlvPfdNwiKRChsfw`,
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpiZG9oYnRwaXZjdHZxbW54cGhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMyNTM3OTYsImV4cCI6MjA2ODgyOTc5Nn0.Wy9IrkjDesWC_8ON_SG9U5TqMvMHlvPfdNwiKRChsfw'
       }
     });
 
     if (!uploadResponse.ok) {
-      throw new Error(`S3 upload failed: ${uploadResponse.status}`);
+      const errorText = await uploadResponse.text();
+      console.error('S3 upload error response:', errorText);
+      throw new Error(`S3 upload failed: ${uploadResponse.status} - ${errorText}`);
     }
 
     // Return the public URL
@@ -48,3 +46,6 @@ export const uploadImageToS3 = async (imageUri, fileName) => {
     throw error;
   }
 };
+
+// Default export to fix the warning
+export default { uploadImageToS3 };
