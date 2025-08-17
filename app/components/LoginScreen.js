@@ -1,6 +1,12 @@
-
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, ImageBackground, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ImageBackground,
+  Alert,
+} from "react-native";
 import tw from "twrnc";
 
 export default function LoginScreen({ onLogin }) {
@@ -15,48 +21,18 @@ export default function LoginScreen({ onLogin }) {
     }
 
     setIsLoading(true);
-    try {
-      const response = await fetch('hostname/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email.trim(),
-          password: password,
-        }),
-      });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        // Login successful
-        Alert.alert("Success", data.message);
-        onLogin(data.user, data.token);
-      } else {
-        // Handle different error cases
-        let errorMessage = data.error || 'Login failed';
-        if (response.status === 404) {
-          errorMessage = 'User not found';
-        } else if (response.status === 401) {
-          errorMessage = 'Invalid email or password';
-        } else if (response.status === 403) {
-          errorMessage = 'Account not approved yet. Please contact administrator.';
-        }
-        Alert.alert("Login Failed", errorMessage);
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      Alert.alert("Error", "Network error. Please check your connection and try again.");
-    } finally {
+    onLogin(email, password).finally(() => {
       setIsLoading(false);
-    }
+    });
   };
 
   return (
     <View style={tw`flex-1 bg-blue-900`}>
       <ImageBackground
-        source={{ uri: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80' }}
+        source={{
+          uri: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+        }}
         style={tw`flex-1 justify-center items-center`}
         imageStyle={tw`opacity-20`}
       >
@@ -75,7 +51,7 @@ export default function LoginScreen({ onLogin }) {
               Quality Assurance Platform
             </Text>
           </View>
-          
+
           <TextInput
             style={tw`w-full border-2 border-gray-300 rounded-xl p-4 mb-4 bg-white text-gray-800`}
             placeholder="Email Address"
@@ -85,7 +61,7 @@ export default function LoginScreen({ onLogin }) {
             autoCapitalize="none"
             keyboardType="email-address"
           />
-          
+
           <TextInput
             style={tw`w-full border-2 border-gray-300 rounded-xl p-4 mb-6 bg-white text-gray-800`}
             placeholder="Password"
@@ -94,9 +70,9 @@ export default function LoginScreen({ onLogin }) {
             onChangeText={setPassword}
             secureTextEntry
           />
-          
+
           <TouchableOpacity
-            style={tw`w-full bg-blue-600 rounded-xl p-4 shadow-lg ${isLoading ? 'opacity-70' : ''}`}
+            style={tw`w-full bg-blue-600 rounded-xl p-4 shadow-lg ${isLoading ? "opacity-70" : ""}`}
             onPress={handleLogin}
             disabled={isLoading}
           >
@@ -104,7 +80,7 @@ export default function LoginScreen({ onLogin }) {
               {isLoading ? "Signing In..." : "Sign In"}
             </Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity style={tw`mt-4`}>
             <Text style={tw`text-blue-600 text-center font-medium`}>
               Forgot Password?

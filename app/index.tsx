@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Alert } from "react-native";
 import tw from "twrnc";
 import LoginScreen from "./components/LoginScreen";
 import AuditList from "./components/AuditList";
@@ -16,12 +16,35 @@ const dummyAudits = [
     status: "Pending",
     expectedPayout: 250,
     questions: [
-      { id: "q1", text: "Is the kitchen area clean and well-maintained?", type: "yesno" },
-      { id: "q2", text: "Rate the overall food safety measures", type: "rating", max: 5 },
+      {
+        id: "q1",
+        text: "Is the kitchen area clean and well-maintained?",
+        type: "yesno",
+      },
+      {
+        id: "q2",
+        text: "Rate the overall food safety measures",
+        type: "rating",
+        max: 5,
+      },
       { id: "q3", text: "Upload a photo of the kitchen area", type: "image" },
-      { id: "q4", text: "Are staff wearing proper protective equipment?", type: "yesno" },
-      { id: "q5", text: "Select the hygiene level of food storage", type: "dropdown", options: ["Excellent", "Good", "Average", "Poor"] },
-      { id: "q6", text: "Rate the cleanliness of dining area", type: "rating", max: 5 },
+      {
+        id: "q4",
+        text: "Are staff wearing proper protective equipment?",
+        type: "yesno",
+      },
+      {
+        id: "q5",
+        text: "Select the hygiene level of food storage",
+        type: "dropdown",
+        options: ["Excellent", "Good", "Average", "Poor"],
+      },
+      {
+        id: "q6",
+        text: "Rate the cleanliness of dining area",
+        type: "rating",
+        max: 5,
+      },
       { id: "q7", text: "Upload photo of dining area", type: "image" },
       { id: "q8", text: "Is there proper waste segregation?", type: "yesno" },
     ],
@@ -33,15 +56,47 @@ const dummyAudits = [
     status: "Pending",
     expectedPayout: 400,
     questions: [
-      { id: "q1", text: "Are medical instruments properly sterilized?", type: "yesno" },
-      { id: "q2", text: "Rate the patient safety protocols", type: "rating", max: 5 },
+      {
+        id: "q1",
+        text: "Are medical instruments properly sterilized?",
+        type: "yesno",
+      },
+      {
+        id: "q2",
+        text: "Rate the patient safety protocols",
+        type: "rating",
+        max: 5,
+      },
       { id: "q3", text: "Upload photo of sterilization area", type: "image" },
-      { id: "q4", text: "Is hand sanitization available at all entry points?", type: "yesno" },
-      { id: "q5", text: "Select the waste disposal method", type: "dropdown", options: ["Proper Segregation", "Improper Handling", "Not Observed"] },
-      { id: "q6", text: "Rate the cleanliness of patient wards", type: "rating", max: 5 },
+      {
+        id: "q4",
+        text: "Is hand sanitization available at all entry points?",
+        type: "yesno",
+      },
+      {
+        id: "q5",
+        text: "Select the waste disposal method",
+        type: "dropdown",
+        options: ["Proper Segregation", "Improper Handling", "Not Observed"],
+      },
+      {
+        id: "q6",
+        text: "Rate the cleanliness of patient wards",
+        type: "rating",
+        max: 5,
+      },
       { id: "q7", text: "Upload photo of patient ward", type: "image" },
-      { id: "q8", text: "Are isolation protocols being followed?", type: "yesno" },
-      { id: "q9", text: "Rate the emergency preparedness", type: "rating", max: 5 },
+      {
+        id: "q8",
+        text: "Are isolation protocols being followed?",
+        type: "yesno",
+      },
+      {
+        id: "q9",
+        text: "Rate the emergency preparedness",
+        type: "rating",
+        max: 5,
+      },
     ],
   },
   {
@@ -51,14 +106,41 @@ const dummyAudits = [
     status: "Pending",
     expectedPayout: 300,
     questions: [
-      { id: "q1", text: "Are rooms cleaned and sanitized daily?", type: "yesno" },
-      { id: "q2", text: "Rate the guest safety measures", type: "rating", max: 5 },
+      {
+        id: "q1",
+        text: "Are rooms cleaned and sanitized daily?",
+        type: "yesno",
+      },
+      {
+        id: "q2",
+        text: "Rate the guest safety measures",
+        type: "rating",
+        max: 5,
+      },
       { id: "q3", text: "Upload photo of guest room", type: "image" },
-      { id: "q4", text: "Is fire safety equipment properly maintained?", type: "yesno" },
-      { id: "q5", text: "Select the fire safety compliance level", type: "dropdown", options: ["Fully Compliant", "Partially Compliant", "Non-Compliant"] },
-      { id: "q6", text: "Rate the housekeeping standards", type: "rating", max: 5 },
+      {
+        id: "q4",
+        text: "Is fire safety equipment properly maintained?",
+        type: "yesno",
+      },
+      {
+        id: "q5",
+        text: "Select the fire safety compliance level",
+        type: "dropdown",
+        options: ["Fully Compliant", "Partially Compliant", "Non-Compliant"],
+      },
+      {
+        id: "q6",
+        text: "Rate the housekeeping standards",
+        type: "rating",
+        max: 5,
+      },
       { id: "q7", text: "Upload photo of common areas", type: "image" },
-      { id: "q8", text: "Are emergency exits clearly marked and accessible?", type: "yesno" },
+      {
+        id: "q8",
+        text: "Are emergency exits clearly marked and accessible?",
+        type: "yesno",
+      },
     ],
   },
   {
@@ -68,11 +150,29 @@ const dummyAudits = [
     status: "Completed",
     expectedPayout: 275,
     questions: [
-      { id: "q1", text: "Is the kitchen area clean and well-maintained?", type: "yesno" },
-      { id: "q2", text: "Rate the overall food safety measures", type: "rating", max: 5 },
+      {
+        id: "q1",
+        text: "Is the kitchen area clean and well-maintained?",
+        type: "yesno",
+      },
+      {
+        id: "q2",
+        text: "Rate the overall food safety measures",
+        type: "rating",
+        max: 5,
+      },
       { id: "q3", text: "Upload a photo of the kitchen area", type: "image" },
-      { id: "q4", text: "Are staff wearing proper protective equipment?", type: "yesno" },
-      { id: "q5", text: "Select the hygiene level of food storage", type: "dropdown", options: ["Excellent", "Good", "Average", "Poor"] },
+      {
+        id: "q4",
+        text: "Are staff wearing proper protective equipment?",
+        type: "yesno",
+      },
+      {
+        id: "q5",
+        text: "Select the hygiene level of food storage",
+        type: "dropdown",
+        options: ["Excellent", "Good", "Average", "Poor"],
+      },
     ],
   },
   {
@@ -82,8 +182,17 @@ const dummyAudits = [
     status: "Completed",
     expectedPayout: 450,
     questions: [
-      { id: "q1", text: "Are medical instruments properly sterilized?", type: "yesno" },
-      { id: "q2", text: "Rate the patient safety protocols", type: "rating", max: 5 },
+      {
+        id: "q1",
+        text: "Are medical instruments properly sterilized?",
+        type: "yesno",
+      },
+      {
+        id: "q2",
+        text: "Rate the patient safety protocols",
+        type: "rating",
+        max: 5,
+      },
       { id: "q3", text: "Upload photo of sterilization area", type: "image" },
     ],
   },
@@ -110,28 +219,56 @@ export default function App() {
   // Handler for successful login
   const handleLogin = async (email, password) => {
     try {
-      const response = await fetch('http://localhost:3000/api/auth/login', { // Assuming your backend is running on localhost:3000
-        method: 'POST',
+      let url =
+        "https://musical-dollop-xv6pwqr94w9fvv6j-3001.app.github.dev/api";
+      const response = await fetch(url + "/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: email.trim(), password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // Login successful, store user data and token
-        setCurrentUser(data.user);
-        setAuthToken(data.token);
-        setIsLoggedIn(true);
+        Alert.alert(
+          "Success",
+          data.message,
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                setCurrentUser(data.user);
+                setAuthToken(data.token);
+                setIsLoggedIn(true);
+              },
+            },
+          ],
+          { cancelable: false }
+        );
       } else {
-        // Handle login errors (e.g., invalid credentials, user not approved)
-        alert(`Login failed: ${data.error || 'Unknown error'}`);
+        // Handle different error cases
+        let errorMessage = data.error || "Login failed";
+        if (response.status === 404) {
+          errorMessage = "User not found";
+        } else if (response.status === 401) {
+          errorMessage = "Invalid email or password";
+        } else if (response.status === 403) {
+          errorMessage = "Account not approved yet. Please contact administrator.";
+        }
+        Alert.alert("Login Failed", errorMessage);
+        // You should return a rejected promise here to handle the error in LoginScreen's .catch()
+        return Promise.reject(new Error(errorMessage));
       }
     } catch (error) {
-      console.error('Login error:', error);
-      alert('An error occurred during login. Please try again.');
+      console.error("Login error:", error);
+      Alert.alert(
+        "Error",
+        "Network error. Please check your connection and try again."
+      );
+      // Ensure the promise is rejected so the finally block in LoginScreen runs
+      return Promise.reject(error);
     }
   };
 
@@ -143,12 +280,12 @@ export default function App() {
   const handleAuditSubmit = () => {
     if (selectedAudit) {
       // Update audit status to completed
-      setAudits(prevAudits => 
-        prevAudits.map(audit => 
-          audit.id === selectedAudit.id 
+      setAudits((prevAudits) =>
+        prevAudits.map((audit) =>
+          audit.id === selectedAudit.id
             ? { ...audit, status: "Completed" }
-            : audit
-        )
+            : audit,
+        ),
       );
 
       // Clear answers and go back
