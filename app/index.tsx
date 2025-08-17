@@ -240,8 +240,10 @@ export default function App() {
             comments:
               (typeof answerData === "object" && answerData?.comments) || "",
             photo_url:
-              typeof answerData === "object" && answerData?.image
-                ? [answerData.image]
+              typeof answerData === "object" && answerData?.imageUrl
+                ? [answerData.imageUrl]
+                : typeof answerData === "string" && answerData.startsWith('http')
+                ? [answerData]
                 : [],
           };
         });

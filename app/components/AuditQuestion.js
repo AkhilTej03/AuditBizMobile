@@ -1,22 +1,13 @@
+
 import React from "react";
-import { View, Text, TouchableOpacity, Image, TextInput } from "react-native";
+import { View, Text, TouchableOpacity, Image, TextInput, Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
 import tw from "twrnc";
+import { uploadImageToSupabase } from "../utils/supabase";
 
 export default function AuditQuestion({ question, answer, setAnswer, questionNumber }) {
-  const convertToBase64 = async (uri) => {
-    try {
-      const base64 = await FileSystem.readAsStringAsync(uri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-      return `data:image/jpeg;base64,${base64}`;
-    } catch (error) {
-      console.error("Error converting to base64:", error);
-      return null;
-    }
-  };
+  const [uploading, setUploading] = React.useState(false);
 
   const handleImagePick = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -25,16 +16,7 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
       allowsEditing: true,
     });
     if (!result.canceled) {
-      const base64 = await convertToBase64(result.assets[0].uri);
-      if (question.image_capture && base64) {
-        setAnswer({
-          ...answer,
-          image: base64,
-          uri: result.assets[0].uri
-        });
-      } else {
-        setAnswer(result.assets[0].uri);
-      }
+      await uploadImage(result.assets[0].uri);
     }
   };
 
@@ -45,25 +27,38 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
       allowsEditing: true,
     });
     if (!result.canceled) {
-      const base64 = await convertToBase64(result.assets[0].uri);
-      if (question.image_capture && base64) {
+      await uploadImage(result.assets[0].uri);
+    }
+  };
+
+  const uploadImage = async (imageUri) => {
+    try {
+      setUploading(true);
+      const imageUrl = await uploadImageToSupabase(imageUri, `question_${question.id}_${Date.now()}.jpg`);
+      
+      if (question.image_capture) {
         setAnswer({
           ...answer,
-          image: base64,
-          uri: result.assets[0].uri
+          imageUrl: imageUrl,
+          uri: imageUri // Keep local URI for preview
         });
       } else {
-        setAnswer(result.assets[0].uri);
+        setAnswer(imageUrl);
       }
+    } catch (error) {
+      Alert.alert('Upload Error', 'Failed to upload image. Please try again.');
+      console.error('Image upload error:', error);
+    } finally {
+      setUploading(false);
     }
   };
 
   const isAnswered = answer !== undefined && answer !== null && answer !== "" &&
-                    (typeof answer === 'object' ? answer.value || answer.uri : true);
+                    (typeof answer === 'object' ? answer.value || answer.uri || answer.imageUrl : true);
 
   const getValue = () => {
     if (typeof answer === 'object') {
-      return answer.value || answer.uri || "";
+      return answer.value || answer.uri || answer.imageUrl || "";
     }
     return answer || "";
   };
@@ -106,20 +101,22 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
             <>
               <View style={tw`flex-row gap-3 mb-3`}>
                 <TouchableOpacity
-                  style={tw`flex-1 rounded-xl p-3 border`}
+                  style={tw`flex-1 rounded-xl p-3 border ${uploading ? 'opacity-50' : ''}`}
                   style={{backgroundColor: '#ff520020', borderColor: '#ff5200'}}
                   onPress={handleCameraCapture}
+                  disabled={uploading}
                 >
                   <Text style={tw`text-center font-medium`} style={{color: '#ff5200'}}>
-                    📷 Camera
+                    {uploading ? '⏳ Uploading...' : '📷 Camera'}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={tw`flex-1 bg-purple-100 rounded-xl p-3 border border-purple-200`}
+                  style={tw`flex-1 bg-purple-100 rounded-xl p-3 border border-purple-200 ${uploading ? 'opacity-50' : ''}`}
                   onPress={handleImagePick}
+                  disabled={uploading}
                 >
                   <Text style={tw`text-purple-700 text-center font-medium`}>
-                    🖼️ Gallery
+                    {uploading ? '⏳ Uploading...' : '🖼️ Gallery'}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -132,7 +129,7 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
                     resizeMode="cover"
                   />
                   <Text style={tw`text-green-600 text-sm mt-2 font-medium`}>
-                    Image captured ✓
+                    {answer.imageUrl ? 'Image uploaded ✓' : 'Image captured ✓'}
                   </Text>
                 </View>
               )}
@@ -179,20 +176,22 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
             <>
               <View style={tw`flex-row gap-3 mb-3 mt-4`}>
                 <TouchableOpacity
-                  style={tw`flex-1 rounded-xl p-3 border`}
+                  style={tw`flex-1 rounded-xl p-3 border ${uploading ? 'opacity-50' : ''}`}
                   style={{backgroundColor: '#ff520020', borderColor: '#ff5200'}}
                   onPress={handleCameraCapture}
+                  disabled={uploading}
                 >
                   <Text style={tw`text-center font-medium`} style={{color: '#ff5200'}}>
-                    📷 Camera
+                    {uploading ? '⏳ Uploading...' : '📷 Camera'}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={tw`flex-1 bg-purple-100 rounded-xl p-3 border border-purple-200`}
+                  style={tw`flex-1 bg-purple-100 rounded-xl p-3 border border-purple-200 ${uploading ? 'opacity-50' : ''}`}
                   onPress={handleImagePick}
+                  disabled={uploading}
                 >
                   <Text style={tw`text-purple-700 text-center font-medium`}>
-                    🖼️ Gallery
+                    {uploading ? '⏳ Uploading...' : '🖼️ Gallery'}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -205,7 +204,7 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
                     resizeMode="cover"
                   />
                   <Text style={tw`text-green-600 text-sm mt-2 font-medium`}>
-                    Image captured ✓
+                    {answer.imageUrl ? 'Image uploaded ✓' : 'Image captured ✓'}
                   </Text>
                 </View>
               )}
@@ -239,20 +238,22 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
             <>
               <View style={tw`flex-row gap-3 mb-3`}>
                 <TouchableOpacity
-                  style={tw`flex-1 rounded-xl p-3 border`}
+                  style={tw`flex-1 rounded-xl p-3 border ${uploading ? 'opacity-50' : ''}`}
                   style={{backgroundColor: '#ff520020', borderColor: '#ff5200'}}
                   onPress={handleCameraCapture}
+                  disabled={uploading}
                 >
                   <Text style={tw`text-center font-medium`} style={{color: '#ff5200'}}>
-                    📷 Camera
+                    {uploading ? '⏳ Uploading...' : '📷 Camera'}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={tw`flex-1 bg-purple-100 rounded-xl p-3 border border-purple-200`}
+                  style={tw`flex-1 bg-purple-100 rounded-xl p-3 border border-purple-200 ${uploading ? 'opacity-50' : ''}`}
                   onPress={handleImagePick}
+                  disabled={uploading}
                 >
                   <Text style={tw`text-purple-700 text-center font-medium`}>
-                    🖼️ Gallery
+                    {uploading ? '⏳ Uploading...' : '🖼️ Gallery'}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -265,7 +266,7 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
                     resizeMode="cover"
                   />
                   <Text style={tw`text-green-600 text-sm mt-2 font-medium`}>
-                    Image captured ✓
+                    {answer.imageUrl ? 'Image uploaded ✓' : 'Image captured ✓'}
                   </Text>
                 </View>
               )}
@@ -287,20 +288,22 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
 
           <View style={tw`flex-row gap-3 mb-3`}>
             <TouchableOpacity
-              style={tw`flex-1 rounded-xl p-3 border`}
+              style={tw`flex-1 rounded-xl p-3 border ${uploading ? 'opacity-50' : ''}`}
               style={{backgroundColor: '#ff520020', borderColor: '#ff5200'}}
               onPress={handleCameraCapture}
+              disabled={uploading}
             >
               <Text style={tw`text-center font-medium`} style={{color: '#ff5200'}}>
-                📷 Camera
+                {uploading ? '⏳ Uploading...' : '📷 Camera'}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={tw`flex-1 bg-purple-100 rounded-xl p-3 border border-purple-200`}
+              style={tw`flex-1 bg-purple-100 rounded-xl p-3 border border-purple-200 ${uploading ? 'opacity-50' : ''}`}
               onPress={handleImagePick}
+              disabled={uploading}
             >
               <Text style={tw`text-purple-700 text-center font-medium`}>
-                🖼️ Gallery
+                {uploading ? '⏳ Uploading...' : '🖼️ Gallery'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -313,7 +316,7 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
                 resizeMode="cover"
               />
               <Text style={tw`text-green-600 text-sm mt-2 font-medium`}>
-                Image captured ✓
+                {(typeof answer === 'object' && answer?.imageUrl) || (typeof answer === 'string' && answer.startsWith('http')) ? 'Image uploaded ✓' : 'Image captured ✓'}
               </Text>
             </View>
           )}
