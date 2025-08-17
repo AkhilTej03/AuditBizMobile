@@ -17,7 +17,7 @@ export default function CompletedAudits({ audits, onSelectAudit, onNavigate, onL
   return (
     <View style={tw`flex-1 bg-gray-50`}>
       {/* Header */}
-      <View style={tw`bg-purple-600 pt-12 pb-6 px-4`}>
+      <View style={tw`pt-12 pb-6 px-4`} style={{backgroundColor: '#ff5200'}}>
         <View style={tw`flex-row items-center justify-between mb-4`}>
           <View style={tw`flex-row items-center`}>
             <TouchableOpacity

@@ -10,48 +10,6 @@ import CompletedAudits from "./components/CompletedAudits";
 // Define HOSTNAME here, or import it from a config file
 const HOSTNAME = "https://musical-dollop-xv6pwqr94w9fvv6j-3001.app.github.dev"; // Replace with your actual hostname
 
-/*
-{
-  id: "1",
-  type: "Restaurant",
-  location: "Green Leaf Restaurant, MG Road, Bengaluru",
-  status: "Pending",
-  expectedPayout: 250,
-  questions: [
-    {
-      id: "q1",
-      text: "Is the kitchen area clean and well-maintained?",
-      type: "yesno",
-    },
-    {
-      id: "q2",
-      text: "Rate the overall food safety measures",
-      type: "rating",
-      max: 5,
-    },
-    { id: "q3", text: "Upload a photo of the kitchen area", type: "image" },
-    {
-      id: "q4",
-      text: "Are staff wearing proper protective equipment?",
-      type: "yesno",
-    },
-    {
-      id: "q5",
-      text: "Select the hygiene level of food storage",
-      type: "dropdown",
-      options: ["Excellent", "Good", "Average", "Poor"],
-    },
-    {
-      id: "q6",
-      text: "Rate the cleanliness of dining area",
-      type: "rating",
-      max: 5,
-    },
-    { id: "q7", text: "Upload photo of dining area", type: "image" },
-    { id: "q8", text: "Is there proper waste segregation?", type: "yesno" },
-  ],
-},
-*/
 const dummyPayouts = [
   { id: "1", auditId: "4", amount: 275, status: "Completed" },
   { id: "2", auditId: "5", amount: 450, status: "Processing" },
@@ -261,27 +219,34 @@ export default function App() {
           );
           const answerData = answers[questionId];
           console.log(answerData, "AnswerData");
+          
+          // Fix response format based on question type and answer structure
+          let response;
+          if (typeof answerData === 'object' && answerData !== null) {
+            response = answerData.value || answerData.response || answerData.uri || answerData;
+          } else {
+            response = answerData;
+          }
+          
           return {
             checklist_item: question ? question.text : "Unknown Question",
             checklist_type: question ? question.type : "Unknown Type",
-            response: answerData.response,
-            comments: answerData.comments || "",
-            photo_url: answerData.photo_url || [],
+            response: response,
+            comments: (typeof answerData === 'object' && answerData?.comments) || "",
+            photo_url: (typeof answerData === 'object' && answerData?.image) ? [answerData.image] : [],
           };
         });
-        // console.log("Formatted answers:", formattedAnswers);
+        console.log("Formatted answers:", formattedAnswers);
         const success = await submitAuditReport(auditId, formattedAnswers);
 
         if (success) {
-          // Update local state to reflect completed audit if submission was successful
-          // setAudits((prevAudits) =>
-          //   prevAudits.map((audit) =>
-          //     audit.id === auditId ? { ...audit, status: "Completed" } : audit,
-          //   ),
-          // );
           setAnswers({});
           setSelectedAudit(null);
-          setCurrentScreen("completed");
+          setCurrentScreen("audits");
+          // Refresh audits after successful submission
+          if (userSamikshakId) {
+            await fetchAudits(userSamikshakId);
+          }
         } else {
           console.log("Audit submission failed");
         }
@@ -332,11 +297,13 @@ export default function App() {
           onSelectAudit={setSelectedAudit}
           onNavigate={handleScreenChange}
           onLogout={handleLogout}
+          onRefresh={() => userSamikshakId && fetchAudits(userSamikshakId)}
+          refreshing={loading}
         />
       )}
       {currentScreen === "completed" && (
         <CompletedAudits
-          audits={audits.filter((audit) => audit.audit.status === "completed")}
+          audits={audits.filter((audit) => audit.status === "Completed" || audit.status === "completed")}
           onSelectAudit={setSelectedAudit}
           onNavigate={handleScreenChange}
           onLogout={handleLogout}

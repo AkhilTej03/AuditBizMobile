@@ -48,10 +48,10 @@ export default function AuditDetail({
   return (
     <View style={tw`flex-1 bg-gray-50`}>
       {/* Header */}
-      <View style={tw`bg-blue-600 pt-12 pb-6 px-4`}>
+      <View style={tw`pt-12 pb-6 px-4`} style={{backgroundColor: '#ff5200'}}>
         <View style={tw`flex-row items-center mb-4`}>
           <TouchableOpacity
-            style={tw`bg-blue-700 rounded-full p-2 mr-3`}
+            style={tw`bg-white bg-opacity-20 rounded-full p-2 mr-3`}
             onPress={onBack}
           >
             <Text style={tw`text-white text-lg`}>←</Text>
@@ -70,14 +70,14 @@ export default function AuditDetail({
         </View>
 
         {auditStarted && (
-          <View style={tw`bg-blue-700 rounded-lg p-3`}>
+          <View style={tw`bg-white bg-opacity-20 rounded-lg p-3`}>
             <View style={tw`flex-row justify-between items-center mb-2`}>
               <Text style={tw`text-white text-sm`}>Progress</Text>
               <Text style={tw`text-white text-sm font-bold`}>
                 {answeredQuestions}/{totalQuestions}
               </Text>
             </View>
-            <View style={tw`bg-blue-800 rounded-full h-2`}>
+            <View style={tw`bg-white bg-opacity-30 rounded-full h-2`}>
               <View 
                 style={[
                   tw`bg-white rounded-full h-2`,
@@ -174,7 +174,8 @@ export default function AuditDetail({
             </View>
 
             <TouchableOpacity
-              style={tw`bg-blue-600 rounded-2xl p-4 shadow-lg`}
+              style={tw`rounded-2xl p-4 shadow-lg`}
+              style={{backgroundColor: '#ff5200'}}
               onPress={() => setModalVisible(true)}
             >
               <Text style={tw`text-white text-center font-bold text-lg`}>

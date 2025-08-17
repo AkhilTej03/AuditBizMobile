@@ -1,6 +1,6 @@
 
 import React from "react";
-import { View, Text, FlatList, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, ScrollView, RefreshControl } from "react-native";
 import tw from "twrnc";
 
 const getAuditIcon = (type) => {
@@ -21,25 +21,33 @@ const getStatusColor = (status) => {
   }
 };
 
-export default function AuditList({ audits, onSelectAudit, onNavigate, onLogout }) {
+export default function AuditList({ audits, onSelectAudit, onNavigate, onLogout, onRefresh, refreshing }) {
   const totalEarnings = audits.reduce((sum, audit) => sum + audit.expectedPayout, 0);
 
   return (
     <View style={tw`flex-1 bg-gray-50`}>
       {/* Header */}
-      <View style={tw`bg-blue-600 pt-12 pb-6 px-4`}>
+      <View style={tw`pt-12 pb-6 px-4`} style={{backgroundColor: '#ff5200'}}>
         <View style={tw`flex-row justify-between items-center mb-2`}>
           <Text style={tw`text-white text-2xl font-bold`}>
             Pending Audits
           </Text>
-          <TouchableOpacity
-            style={tw`bg-red-500 rounded-lg px-3 py-2`}
-            onPress={onLogout}
-          >
-            <Text style={tw`text-white font-bold text-sm`}>Logout</Text>
-          </TouchableOpacity>
+          <View style={tw`flex-row gap-2`}>
+            <TouchableOpacity
+              style={tw`bg-white bg-opacity-20 rounded-lg px-3 py-2`}
+              onPress={onRefresh}
+            >
+              <Text style={tw`text-white font-bold text-sm`}>Refresh</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={tw`bg-red-500 rounded-lg px-3 py-2`}
+              onPress={onLogout}
+            >
+              <Text style={tw`text-white font-bold text-sm`}>Logout</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={tw`bg-blue-700 rounded-lg p-3`}>
+        <View style={tw`bg-white bg-opacity-20 rounded-lg p-3`}>
           <Text style={tw`text-white text-sm`}>
             Total Potential Earnings
           </Text>
@@ -71,13 +79,21 @@ export default function AuditList({ audits, onSelectAudit, onNavigate, onLogout 
         keyExtractor={(item) => item.id}
         contentContainerStyle={tw`p-4`}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing || false}
+            onRefresh={onRefresh}
+            tintColor="#ff5200"
+            colors={["#ff5200"]}
+          />
+        }
         renderItem={({ item }) => (
           <TouchableOpacity
             style={tw`bg-white rounded-2xl p-5 mb-4 shadow-lg border border-gray-100`}
             onPress={() => onSelectAudit(item)}
           >
             <View style={tw`flex-row items-center mb-3`}>
-              <View style={tw`bg-blue-100 rounded-full p-3 mr-4`}>
+              <View style={tw`rounded-full p-3 mr-4`} style={{backgroundColor: '#ff520020'}}>
                 <Text style={tw`text-2xl`}>{getAuditIcon(item.type)}</Text>
               </View>
               <View style={tw`flex-1`}>
@@ -106,7 +122,7 @@ export default function AuditList({ audits, onSelectAudit, onNavigate, onLogout 
                   ₹{item.expectedPayout}
                 </Text>
               </View>
-              <View style={tw`bg-blue-600 rounded-full px-4 py-2`}>
+              <View style={tw`rounded-full px-4 py-2`} style={{backgroundColor: '#ff5200'}}>
                 <Text style={tw`text-white font-medium text-sm`}>
                   Start Audit
                 </Text>

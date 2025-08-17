@@ -1,4 +1,3 @@
-
 import React from "react";
 import { View, Text, TouchableOpacity, Image, TextInput } from "react-native";
 import { Picker } from "@react-native-picker/picker";
@@ -59,7 +58,7 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
     }
   };
 
-  const isAnswered = answer !== undefined && answer !== null && answer !== "" && 
+  const isAnswered = answer !== undefined && answer !== null && answer !== "" &&
                     (typeof answer === 'object' ? answer.value || answer.uri : true);
 
   const getValue = () => {
@@ -82,13 +81,13 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
       return (
         <View style={tw`bg-white rounded-2xl p-5 mb-4 shadow-sm border border-gray-100`}>
           <View style={tw`flex-row items-center mb-3`}>
-            <View style={tw`bg-blue-100 rounded-full w-8 h-8 items-center justify-center mr-3`}>
-              <Text style={tw`text-blue-600 font-bold text-sm`}>{questionNumber}</Text>
+            <View style={tw`rounded-full w-8 h-8 items-center justify-center mr-3`} style={{backgroundColor: '#ff520020'}}>
+              <Text style={tw`font-bold text-sm`} style={{color: '#ff5200'}}>{questionNumber}</Text>
             </View>
             <Text style={tw`text-gray-800 font-medium flex-1`}>{question.text}</Text>
             {isAnswered && <Text style={tw`text-green-500 text-lg`}>✓</Text>}
           </View>
-          
+
           <View style={tw`flex-row flex-wrap gap-2 mb-3`}>
             {question.options.map((option) => (
               <TouchableOpacity
@@ -107,10 +106,11 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
             <>
               <View style={tw`flex-row gap-3 mb-3`}>
                 <TouchableOpacity
-                  style={tw`flex-1 bg-blue-100 rounded-xl p-3 border border-blue-200`}
+                  style={tw`flex-1 rounded-xl p-3 border`}
+                  style={{backgroundColor: '#ff520020', borderColor: '#ff5200'}}
                   onPress={handleCameraCapture}
                 >
-                  <Text style={tw`text-blue-700 text-center font-medium`}>
+                  <Text style={tw`text-center font-medium`} style={{color: '#ff5200'}}>
                     📷 Camera
                   </Text>
                 </TouchableOpacity>
@@ -123,7 +123,7 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
                   </Text>
                 </TouchableOpacity>
               </View>
-              
+
               {answer?.uri && (
                 <View style={tw`items-center`}>
                   <Image
@@ -152,8 +152,8 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
       return (
         <View style={tw`bg-white rounded-2xl p-5 mb-4 shadow-sm border border-gray-100`}>
           <View style={tw`flex-row items-center mb-3`}>
-            <View style={tw`bg-blue-100 rounded-full w-8 h-8 items-center justify-center mr-3`}>
-              <Text style={tw`text-blue-600 font-bold text-sm`}>{questionNumber}</Text>
+            <View style={tw`rounded-full w-8 h-8 items-center justify-center mr-3`} style={{backgroundColor: '#ff520020'}}>
+              <Text style={tw`font-bold text-sm`} style={{color: '#ff5200'}}>{questionNumber}</Text>
             </View>
             <Text style={tw`text-gray-800 font-medium flex-1`}>{question.text}</Text>
             {isAnswered && <Text style={tw`text-green-500 text-lg`}>✓</Text>}
@@ -179,10 +179,11 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
             <>
               <View style={tw`flex-row gap-3 mb-3 mt-4`}>
                 <TouchableOpacity
-                  style={tw`flex-1 bg-blue-100 rounded-xl p-3 border border-blue-200`}
+                  style={tw`flex-1 rounded-xl p-3 border`}
+                  style={{backgroundColor: '#ff520020', borderColor: '#ff5200'}}
                   onPress={handleCameraCapture}
                 >
-                  <Text style={tw`text-blue-700 text-center font-medium`}>
+                  <Text style={tw`text-center font-medium`} style={{color: '#ff5200'}}>
                     📷 Camera
                   </Text>
                 </TouchableOpacity>
@@ -195,7 +196,7 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
                   </Text>
                 </TouchableOpacity>
               </View>
-              
+
               {answer?.uri && (
                 <View style={tw`items-center`}>
                   <Image
@@ -217,13 +218,13 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
       return (
         <View style={tw`bg-white rounded-2xl p-5 mb-4 shadow-sm border border-gray-100`}>
           <View style={tw`flex-row items-center mb-3`}>
-            <View style={tw`bg-blue-100 rounded-full w-8 h-8 items-center justify-center mr-3`}>
-              <Text style={tw`text-blue-600 font-bold text-sm`}>{questionNumber}</Text>
+            <View style={tw`rounded-full w-8 h-8 items-center justify-center mr-3`} style={{backgroundColor: '#ff520020'}}>
+              <Text style={tw`font-bold text-sm`} style={{color: '#ff5200'}}>{questionNumber}</Text>
             </View>
             <Text style={tw`text-gray-800 font-medium flex-1`}>{question.text}</Text>
             {isAnswered && <Text style={tw`text-green-500 text-lg`}>✓</Text>}
           </View>
-          
+
           <TextInput
             style={tw`border border-gray-200 rounded-xl p-3 bg-gray-50 text-gray-800 mb-3`}
             placeholder="Enter your response..."
@@ -238,10 +239,11 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
             <>
               <View style={tw`flex-row gap-3 mb-3`}>
                 <TouchableOpacity
-                  style={tw`flex-1 bg-blue-100 rounded-xl p-3 border border-blue-200`}
+                  style={tw`flex-1 rounded-xl p-3 border`}
+                  style={{backgroundColor: '#ff520020', borderColor: '#ff5200'}}
                   onPress={handleCameraCapture}
                 >
-                  <Text style={tw`text-blue-700 text-center font-medium`}>
+                  <Text style={tw`text-center font-medium`} style={{color: '#ff5200'}}>
                     📷 Camera
                   </Text>
                 </TouchableOpacity>
@@ -254,7 +256,7 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
                   </Text>
                 </TouchableOpacity>
               </View>
-              
+
               {answer?.uri && (
                 <View style={tw`items-center`}>
                   <Image
@@ -276,19 +278,20 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
       return (
         <View style={tw`bg-white rounded-2xl p-5 mb-4 shadow-sm border border-gray-100`}>
           <View style={tw`flex-row items-center mb-3`}>
-            <View style={tw`bg-blue-100 rounded-full w-8 h-8 items-center justify-center mr-3`}>
-              <Text style={tw`text-blue-600 font-bold text-sm`}>{questionNumber}</Text>
+            <View style={tw`rounded-full w-8 h-8 items-center justify-center mr-3`} style={{backgroundColor: '#ff520020'}}>
+              <Text style={tw`font-bold text-sm`} style={{color: '#ff5200'}}>{questionNumber}</Text>
             </View>
             <Text style={tw`text-gray-800 font-medium flex-1`}>{question.text}</Text>
             {isAnswered && <Text style={tw`text-green-500 text-lg`}>✓</Text>}
           </View>
-          
+
           <View style={tw`flex-row gap-3 mb-3`}>
             <TouchableOpacity
-              style={tw`flex-1 bg-blue-100 rounded-xl p-3 border border-blue-200`}
+              style={tw`flex-1 rounded-xl p-3 border`}
+              style={{backgroundColor: '#ff520020', borderColor: '#ff5200'}}
               onPress={handleCameraCapture}
             >
-              <Text style={tw`text-blue-700 text-center font-medium`}>
+              <Text style={tw`text-center font-medium`} style={{color: '#ff5200'}}>
                 📷 Camera
               </Text>
             </TouchableOpacity>
@@ -301,7 +304,7 @@ export default function AuditQuestion({ question, answer, setAnswer, questionNum
               </Text>
             </TouchableOpacity>
           </View>
-          
+
           {(answer?.uri || answer) && (
             <View style={tw`items-center`}>
               <Image
