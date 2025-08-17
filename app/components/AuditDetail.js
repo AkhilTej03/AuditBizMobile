@@ -60,7 +60,10 @@ export default function AuditDetail({
             <Text style={tw`text-white text-xl font-bold`}>
               {audit.type} Audit
             </Text>
-            <Text style={tw`text-white text-sm`}>
+            <Text style={tw`text-white text-sm font-semibold`}>
+              {audit.businessName}
+            </Text>
+            <Text style={tw`text-white text-xs`}>
               {audit.location}
             </Text>
           </View>
@@ -141,7 +144,10 @@ export default function AuditDetail({
               <Text style={tw`text-2xl font-bold text-gray-800 text-center`}>
                 {audit.type} Audit
               </Text>
-              <Text style={tw`text-gray-600 text-center mt-2`}>
+              <Text style={tw`text-lg font-semibold text-gray-700 text-center mt-1`}>
+                {audit.businessName}
+              </Text>
+              <Text style={tw`text-gray-600 text-center mt-1 text-sm`}>
                 {audit.location}
               </Text>
             </View>

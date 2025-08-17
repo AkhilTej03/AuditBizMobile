@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Alert } from "react-native";
 import tw from "twrnc";
 import LoginScreen from "./components/LoginScreen";
@@ -7,7 +7,10 @@ import AuditDetail from "./components/AuditDetail";
 import PayoutScreen from "./components/PayoutScreen";
 import CompletedAudits from "./components/CompletedAudits";
 
-// Comprehensive audit data with different types and questions
+// Define HOSTNAME here, or import it from a config file
+const HOSTNAME = "https://your-backend-hostname.com"; // Replace with your actual hostname
+
+// Dummy data - will be replaced by API calls
 const dummyAudits = [
   {
     id: "1",
@@ -198,7 +201,6 @@ const dummyAudits = [
   },
 ];
 
-// Enhanced payout data with different statuses
 const dummyPayouts = [
   { id: "1", auditId: "4", amount: 275, status: "Completed" },
   { id: "2", auditId: "5", amount: 450, status: "Processing" },
@@ -207,21 +209,104 @@ const dummyPayouts = [
   { id: "5", auditId: "2", amount: 400, status: "Pending" },
 ];
 
+// Helper function to transform API data to the expected format
+const transformAuditData = (apiAudits) => {
+  return apiAudits.map((audit) => ({
+    id: audit.auditId, // Assuming 'auditId' from API maps to 'id'
+    type: audit.businessType, // Assuming 'businessType' from API
+    location: `${audit.businessName}, ${audit.address}`, // Combining fields for location
+    status: audit.status, // Assuming 'status' field exists
+    expectedPayout: audit.estimatedPayout, // Assuming 'estimatedPayout' from API
+    questions: audit.checklist_items.map((item) => ({
+      id: item.id, // Assuming 'id' for question
+      text: item.question, // Assuming 'question' is the question text
+      type: item.question_type.toLowerCase(), // Map API type to local type
+      options: item.options || [], // Handle cases where options might be missing
+      max: item.question_type === "Rating" ? 10 : undefined, // Assuming rating questions have a max of 10 from the example
+    })),
+  }));
+};
+
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null); // Added to store user data
-  const [authToken, setAuthToken] = useState(null); // Added to store token
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authToken, setAuthToken] = useState(null);
   const [currentScreen, setCurrentScreen] = useState("audits");
   const [selectedAudit, setSelectedAudit] = useState(null);
   const [answers, setAnswers] = useState({});
-  const [audits, setAudits] = useState(dummyAudits);
+  const [audits, setAudits] = useState([]);
+  const [userSamikshakId, setUserSamikshakId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  // Handler for successful login
+  const fetchAudits = async (samikshakId) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${HOSTNAME}/api/audits/samikshak/${samikshakId}`);
+      const data = await response.json();
+
+      if (data.success && data.data) {
+        const transformedAudits = transformAuditData(data.data);
+        setAudits(transformedAudits);
+      } else {
+        Alert.alert("Error", "Failed to fetch audits or no audits found.");
+        setAudits([]); // Ensure audits are cleared if fetch fails or returns empty
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to fetch audits. Please check your network connection.");
+      console.error("Fetch audits error:", error);
+      setAudits([]); // Clear audits on network error
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const submitAuditReport = async (auditId, responses) => {
+    try {
+      setLoading(true);
+      const formattedResponses = responses.map(response => ({
+        checklist_item: response.checklist_item,
+        checklist_type: response.checklist_type,
+        to: response.to,
+        from: response.from,
+        response: response.response,
+        comments: response.comments,
+        photo_url: response.photo_url
+      }));
+
+      const response = await fetch(`${HOSTNAME}/api/audits/${auditId}/saveAuditReport1`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}` // Assuming token is needed for submission
+        },
+        body: JSON.stringify({ responses: formattedResponses })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert("Success", "Audit submitted successfully!");
+        return true;
+      } else {
+        // Attempt to show a more specific error message from the backend
+        const errorMessage = data.error || data.message || "Failed to submit audit";
+        Alert.alert("Error", errorMessage);
+        return false;
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to submit audit. Please check your network connection.");
+      console.error("Submit audit error:", error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleLogin = async (email, password) => {
     try {
-      let url =
-        "https://musical-dollop-xv6pwqr94w9fvv6j-3001.app.github.dev/api";
-      const response = await fetch(url + "/auth/login", {
+      setLoading(true);
+      let loginUrl = `${HOSTNAME}/api/auth/login`; // Assuming your login endpoint is /api/auth/login
+      const response = await fetch(loginUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -234,22 +319,26 @@ export default function App() {
       if (response.ok) {
         Alert.alert(
           "Success",
-          data.message,
+          data.message || "Login successful",
           [
             {
               text: "OK",
               onPress: () => {
                 setCurrentUser(data.user);
                 setAuthToken(data.token);
+                // Assuming login response contains the samikshakId
+                const samikshakId = data.user.samikshakId || "5cfff085-ab94-4044-b97b-808cc16491c3"; // Fallback to dummy if not in response
+                setUserSamikshakId(samikshakId);
                 setIsLoggedIn(true);
+                // Fetch audits immediately after successful login and setting samikshakId
+                fetchAudits(samikshakId);
               },
             },
           ],
           { cancelable: false }
         );
       } else {
-        // Handle different error cases
-        let errorMessage = data.error || "Login failed";
+        let errorMessage = data.error || data.message || "Login failed";
         if (response.status === 404) {
           errorMessage = "User not found";
         } else if (response.status === 401) {
@@ -258,7 +347,6 @@ export default function App() {
           errorMessage = "Account not approved yet. Please contact administrator.";
         }
         Alert.alert("Login Failed", errorMessage);
-        // You should return a rejected promise here to handle the error in LoginScreen's .catch()
         return Promise.reject(new Error(errorMessage));
       }
     } catch (error) {
@@ -267,8 +355,9 @@ export default function App() {
         "Error",
         "Network error. Please check your connection and try again."
       );
-      // Ensure the promise is rejected so the finally block in LoginScreen runs
       return Promise.reject(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -277,26 +366,45 @@ export default function App() {
     setSelectedAudit(null);
   };
 
-  const handleAuditSubmit = () => {
+  const handleAuditSubmit = async () => {
     if (selectedAudit) {
-      // Update audit status to completed
-      setAudits((prevAudits) =>
-        prevAudits.map((audit) =>
-          audit.id === selectedAudit.id
-            ? { ...audit, status: "Completed" }
-            : audit,
-        ),
-      );
+      const auditId = selectedAudit.id;
+      const formattedAnswers = Object.keys(answers).map((questionId) => {
+        const question = selectedAudit.questions.find(q => q.id === questionId);
+        const answerData = answers[questionId];
+        return {
+          checklist_item: question ? question.text : 'Unknown Question',
+          checklist_type: question ? question.type : 'Unknown Type',
+          response: answerData.response,
+          comments: answerData.comments || '',
+          photo_url: answerData.photo_url || []
+        };
+      });
 
-      // Clear answers and go back
-      setAnswers({});
-      setSelectedAudit(null);
-      setCurrentScreen("completed");
+      const success = await submitAuditReport(auditId, formattedAnswers);
+
+      if (success) {
+        // Update local state to reflect completed audit if submission was successful
+        setAudits((prevAudits) =>
+          prevAudits.map((audit) =>
+            audit.id === auditId ? { ...audit, status: "Completed" } : audit
+          )
+        );
+        setAnswers({});
+        setSelectedAudit(null);
+        setCurrentScreen("completed");
+      }
     }
   };
 
+  // Effect to fetch audits when the component mounts or when isLoggedIn/userSamikshakId changes
+  useEffect(() => {
+    if (isLoggedIn && userSamikshakId) {
+      fetchAudits(userSamikshakId);
+    }
+  }, [isLoggedIn, userSamikshakId]);
+
   if (!isLoggedIn) {
-    // Pass the handleLogin function as a prop to LoginScreen
     return <LoginScreen onLogin={handleLogin} />;
   }
 
@@ -308,12 +416,18 @@ export default function App() {
         setAnswers={setAnswers}
         onBack={() => setSelectedAudit(null)}
         onSubmit={handleAuditSubmit}
+        loading={loading}
       />
     );
   }
 
   return (
     <View style={tw`flex-1 bg-gray-100`}>
+      {loading && (
+        <View style={tw`absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50`}>
+          <Text style={tw`text-white text-lg`}>Loading...</Text>
+        </View>
+      )}
       {currentScreen === "audits" && (
         <AuditList
           audits={audits.filter((audit) => audit.status === "Pending")}
