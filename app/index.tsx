@@ -8,7 +8,9 @@ import PayoutScreen from "./components/PayoutScreen";
 import CompletedAudits from "./components/CompletedAudits";
 
 // Define HOSTNAME here, or import it from a config file
-const HOSTNAME = "https://musical-dollop-xv6pwqr94w9fvv6j-3001.app.github.dev"; // Replace with your actual hostname
+// const HOSTNAME = "https://sanatanbackend-r-git-main-zbplus.vercel.app"; // Replace with your actual hostname
+const HOSTNAME = "https://sanatanbackend-r.vercel.app"; // Replace with your actual hostname
+// const HOSTNAME = "https://musical-dollop-xv6pwqr94w9fvv6j-3001.app.github.dev"; // Replace with your actual hostname
 
 const dummyPayouts = [
   { id: "1", auditId: "4", amount: 275, status: "Completed" },
@@ -242,9 +244,10 @@ export default function App() {
             photo_url:
               typeof answerData === "object" && answerData?.imageUrl
                 ? [answerData.imageUrl]
-                : typeof answerData === "string" && answerData.startsWith('http')
-                ? [answerData]
-                : [],
+                : typeof answerData === "string" &&
+                    answerData.startsWith("http")
+                  ? [answerData]
+                  : [],
           };
         });
         console.log("Formatted answers:", formattedAnswers);

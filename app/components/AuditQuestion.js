@@ -151,55 +151,44 @@ export default function AuditQuestion({
 
           {question.image_capture && (
             <>
-              <View style={tw`flex-row gap-3 mb-4`}>
+              <View style={tw`flex-row gap-3 mb-3`}>
                 <TouchableOpacity
-                  style={[tw`flex-1 rounded-2xl p-4 border-2 shadow-sm`,
-                    uploading ? tw`opacity-50` : tw``,
-                    { backgroundColor: '#fff5f0', borderColor: '#fed7aa' }
-                  ]}
+                  style={tw`flex-1 rounded-xl p-3 border ${uploading ? "opacity-50" : ""}`}
+                  style={{
+                    backgroundColor: "#ff520020",
+                    borderColor: "#ff5200",
+                  }}
                   onPress={handleCameraCapture}
                   disabled={uploading}
-                  activeOpacity={0.7}
                 >
-                  <View style={tw`items-center`}>
-                    <Text style={tw`text-xl mb-1`}>📷</Text>
-                    <Text style={tw`font-semibold text-sm`} style={{ color: "#ff5200" }}>
-                      {uploading ? "Uploading..." : "Camera"}
-                    </Text>
-                  </View>
+                  <Text
+                    style={tw`text-center font-medium`}
+                    style={{ color: "#ff5200" }}
+                  >
+                    {uploading ? "⏳ Uploading..." : "📷 Camera"}
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[tw`flex-1 rounded-2xl p-4 border-2 shadow-sm`,
-                    uploading ? tw`opacity-50` : tw``,
-                    { backgroundColor: '#f3e8ff', borderColor: '#d8b4fe' }
-                  ]}
+                  style={tw`flex-1 bg-purple-100 rounded-xl p-3 border border-purple-200 ${uploading ? "opacity-50" : ""}`}
                   onPress={handleImagePick}
                   disabled={uploading}
-                  activeOpacity={0.7}
                 >
-                  <View style={tw`items-center`}>
-                    <Text style={tw`text-xl mb-1`}>🖼️</Text>
-                    <Text style={tw`text-purple-700 font-semibold text-sm`}>
-                      {uploading ? "Uploading..." : "Gallery"}
-                    </Text>
-                  </View>
+                  <Text style={tw`text-purple-700 text-center font-medium`}>
+                    {uploading ? "⏳ Uploading..." : "🖼️ Gallery"}
+                  </Text>
                 </TouchableOpacity>
               </View>
 
               {answer?.uri && (
                 <View style={tw`items-center`}>
-                  <View style={[tw`rounded-2xl p-2 shadow-lg`, { backgroundColor: '#f8fafc' }]}>
-                    <Image
-                      source={{ uri: answer.uri }}
-                      style={tw`w-40 h-40 rounded-xl`}
-                      resizeMode="cover"
-                    />
-                  </View>
-                  <View style={[tw`rounded-full px-4 py-2 mt-3 shadow-sm`, { backgroundColor: '#dcfce7' }]}>
-                    <Text style={tw`text-green-700 text-sm font-semibold`}>
-                      {answer.imageUrl ? "✓ Image uploaded" : "✓ Image captured"}
-                    </Text>
-                  </View>
+                  <Image
+                    source={{ uri: answer.uri }}
+                    style={tw`w-32 h-32 rounded-xl border border-gray-200`}
+                    resizeMode="cover"
+                  />
+                  <Text style={tw`text-green-600 text-sm mt-2 font-medium`}>
+                    {answer.imageUrl ? "Image uploaded ✓" : "Image captured ✓"}
+                  </Text>
                 </View>
               )}
             </>
