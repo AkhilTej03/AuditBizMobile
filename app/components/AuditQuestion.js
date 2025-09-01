@@ -121,10 +121,10 @@ export default function AuditQuestion({
           <View style={tw`flex-row items-center mb-3`}>
             <View
               style={tw`rounded-full w-8 h-8 items-center justify-center mr-3`}
-              style={{ backgroundColor: "#ff520020" }}
+              style={{  }}
             >
               <Text style={tw`font-bold text-sm`} style={{ color: "#ff5200" }}>
-                {questionNumber}
+                {questionNumber+" ) "}
               </Text>
             </View>
             <Text style={tw`text-gray-800 font-medium flex-1`}>

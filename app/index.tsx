@@ -9,7 +9,7 @@ import CompletedAudits from "./components/CompletedAudits";
 
 // Define HOSTNAME here, or import it from a config file
 // const HOSTNAME = "https://sanatanbackend-r-git-main-zbplus.vercel.app"; // Replace with your actual hostname
-const HOSTNAME = "https://sanatanbackend-r.vercel.app"; // Replace with your actual hostname
+const HOSTNAME = "https://audut-x-backend-nnsm.vercel.app"; // Replace with your actual hostname
 // const HOSTNAME = "https://musical-dollop-xv6pwqr94w9fvv6j-3001.app.github.dev"; // Replace with your actual hostname
 
 const dummyPayouts = [
@@ -22,21 +22,30 @@ const dummyPayouts = [
 
 // Helper function to transform API data to the expected format
 const transformAuditData = (apiAudits) => {
-  return apiAudits.map((audit) => ({
-    id: audit.audit_id, // Assuming 'auditId' from API maps to 'id'
-    type: audit.businessType || "Audit", // Assuming 'businessType' from API
-    location: `${audit.audit.vipana.user.full_name}, ${audit.audit.vipana.address}`, // Combining fields for location
-    status: audit.audit.status, // Assuming 'status' field exists
-    expectedPayout: audit.audit.category.auditor_payout.medium, // Assuming 'estimatedPayout' from API
-    questions: audit.audit.category.checklist_items.map((item) => ({
-      id: item.id, // Assuming 'id' for question
-      text: item.name, // Assuming 'question' is the question text
-      type: item.type.toLowerCase(), // Map API type to local type
-      image_capture: item.image_capture,
-      options: item.options || [], // Handle cases where options might be missing
-      max: item.type === "rating" ? 5 : 5, // Assuming rating questions have a max of 10 from the example
-    })),
-  }));
+  return apiAudits.map((audit) => {
+    console.log(audit.audit.category.checklist_items, "Transforming Audit");
+    return ({
+      id: audit.audit_id, // Assuming 'auditId' from API maps to 'id'
+      type: audit.businessType || "Audit", // Assuming 'businessType' from API
+      location: `${audit.audit.vipana.user.full_name}, ${audit.audit.vipana.address}`, // Combining fields for location
+      status: audit.audit.status, // Assuming 'status' field exists
+      expectedPayout: audit.audit.category.auditor_payout.medium, // Assuming 'estimatedPayout' from API
+      questions:
+        audit.audit.category?.checklist_items?.flatMap((factor) =>
+          (factor?.questions || []).map((q) => ({
+            id: q.id,
+            text: q.auditor_text || "Untitled Question",
+            type: q.type?.toLowerCase?.() || "text",
+            importance: q.importance ?? null,
+            nonNegotiable: q.nonNegotiable ?? false,
+            range: { from: q.from ?? null, to: q.to ?? null },
+            options:
+              (q.options || []).map((opt) => (opt.text || "")) || [],
+            factorName: factor.name, // ✅ preserve factor reference if needed
+          }))
+        ) || [],
+    })
+  });
 };
 
 export default function App() {
@@ -57,11 +66,11 @@ export default function App() {
         `${HOSTNAME}/api/audits/samikshak/${samikshakId}`,
       );
       const data = await response.json();
-      // console.log("Fetched audits data:", data);
+      console.log("Fetched audits data:", data);
       if (data.success && data.data) {
         const transformedAudits = transformAuditData(data.data);
         setAudits(transformedAudits);
-        console.log("successfully set Audits");
+        console.log("successfully set Audits", transformedAudits);
       } else {
         Alert.alert("Error", "Failed to fetch audits or no audits found.");
         setAudits([]); // Ensure audits are cleared if fetch fails or returns empty
@@ -131,6 +140,7 @@ export default function App() {
   const handleLogin = async (email, password) => {
     try {
       setLoading(true);
+      console.log(email, password, "Login Attempt");
       let loginUrl = `${HOSTNAME}/api/auth/login`; // Assuming your login endpoint is /api/auth/login
       const response = await fetch(loginUrl, {
         method: "POST",
@@ -143,26 +153,14 @@ export default function App() {
       const data = await response.json();
 
       if (response.ok) {
-        Alert.alert(
-          "Success",
-          data.message || "Login successful",
-          [
-            {
-              text: "OK",
-              onPress: () => {
-                setCurrentUser(data.user);
-                setAuthToken(data.token);
-                // Assuming login response contains the samikshakId
-                const samikshakId = data.user.id; //||"5cfff085-ab94-4044-b97b-808cc16491c3";
-                setUserSamikshakId(samikshakId);
-                setIsLoggedIn(true);
-                // Fetch audits immediately after successful login and setting samikshakId
-                fetchAudits(samikshakId);
-              },
-            },
-          ],
-          { cancelable: false },
-        );
+        setCurrentUser(data.user);
+        setAuthToken(data.token);
+        // Assuming login response contains the samikshakId
+        const samikshakId = data.user.id; //||"5cfff085-ab94-4044-b97b-808cc16491c3";
+        setUserSamikshakId(samikshakId);
+        setIsLoggedIn(true);
+        // Fetch audits immediately after successful login and setting samikshakId
+        fetchAudits(samikshakId);
       } else {
         let errorMessage = data.error || data.message || "Login failed";
         if (response.status === 404) {
@@ -245,7 +243,7 @@ export default function App() {
               typeof answerData === "object" && answerData?.imageUrl
                 ? [answerData.imageUrl]
                 : typeof answerData === "string" &&
-                    answerData.startsWith("http")
+                  answerData.startsWith("http")
                   ? [answerData]
                   : [],
           };
