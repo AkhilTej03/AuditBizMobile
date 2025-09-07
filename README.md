@@ -1,3 +1,5 @@
+# npm install --global eas-cli && eas init --id 1a90abf8-c701-4c75-b690-f67a659953e4
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).

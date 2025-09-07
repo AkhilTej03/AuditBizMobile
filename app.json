@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Swasti-Parivartan-Audits",
-    "slug": "swasti-audits",
+    "slug": "sanatan-audits",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/ss1.png",
@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/ss1.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.vc1.sanatanaudits"
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +38,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "1a90abf8-c701-4c75-b690-f67a659953e4"
+      }
+    },
+    "owner": "vc1"
   }
 }
