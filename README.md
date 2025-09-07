@@ -1,4 +1,8 @@
 # npm install --global eas-cli && eas init --id 1a90abf8-c701-4c75-b690-f67a659953e4
+<!-- npx expo-doctor -->
+<!-- npx expo export -->
+
+eas build -p android -e preview
 
 # Welcome to your Expo app 👋
 
