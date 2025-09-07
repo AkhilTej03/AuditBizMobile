@@ -4,7 +4,7 @@
     "slug": "sanatan-audits",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/ss1.png",
+    "icon": "./assets/images/ss11.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/ss1.png",
+        "foregroundImage": "./assets/images/ss11.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
@@ -34,7 +34,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
