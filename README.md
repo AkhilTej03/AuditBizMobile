@@ -4,6 +4,33 @@
 
 eas build -p android -e preview
 
+keytool -genkey -v -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -storepass 03184b046ee6c45286eedf2477e3a0a2 -keypass e7563d29cd13ba9d97e81aae513bda07 -alias 218a5b39aef5d2cfccc32adf11dfa290 -keystore release.keystore -dname "CN=com.vc1.sanatanaudits,OU=,O=,L=,S=,C=US"
+
+{
+  "android": {
+    "keystore": {
+      "keystorePath": "credentials/android/keystore.jks",
+      "keystorePassword": "03184b046ee6c45286eedf2477e3a0a2",
+      "keyAlias": "218a5b39aef5d2cfccc32adf11dfa290",
+      "keyPassword": "e7563d29cd13ba9d97e81aae513bda07"
+    }
+  }
+}
+
+
+Old
+
+{
+  "android": {
+    "keystore": {
+      "keystorePath": "credentials/android/keystore.jks",
+      "keystorePassword": "2415660c362b3cc8217510c9a9bbdcd6",
+      "keyAlias": "d1f03bd7a59745edf64eff172e227c08",
+      "keyPassword": "5e09a8004a2a17fd40657156aab07623"
+    }
+  }
+}
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
