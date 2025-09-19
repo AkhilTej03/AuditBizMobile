@@ -174,9 +174,12 @@ export default function AuditDetail({
               ))}
             </View>
           </View>
+          {console.log(audit.id)}
 
           {/* Questions */}
-          {audit.questions.map((question, index) => (
+          {audit.questions.map((question, index) => {
+            
+            return(
             <AuditQuestion
               key={question.id}
               question={question}
@@ -186,7 +189,7 @@ export default function AuditDetail({
               }
               questionNumber={index + 1}
             />
-          ))}
+          )})}
           
           {/* Submit Button */}
           <View style={tw`mt-6 mb-32`}>

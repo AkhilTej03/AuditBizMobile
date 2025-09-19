@@ -13,6 +13,7 @@ import tw from "twrnc";
 // import { uploadImageToSupabase } from "../utils/supabase";
 import { uploadImageToS3 } from "../utils/s3Upload";
 
+
 export default function AuditQuestion({
   question,
   answer,
@@ -20,6 +21,8 @@ export default function AuditQuestion({
   questionNumber,
 }) {
   const [uploading, setUploading] = React.useState(false);
+
+  console.log(question);
 
   const handleImagePick = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -33,11 +36,21 @@ export default function AuditQuestion({
   };
 
   const handleCameraCapture = async () => {
+    // Ask for camera permission
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (status !== "granted") {
+      alert("Camera permission is required to take pictures.");
+      return;
+    }
+
+    // Launch camera
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.8,
       allowsEditing: true,
     });
+
     if (!result.canceled) {
       await uploadImage(result.assets[0].uri);
     }
@@ -121,10 +134,11 @@ export default function AuditQuestion({
           <View style={tw`flex-row items-center mb-3`}>
             <View
               style={tw`rounded-full w-8 h-8 items-center justify-center mr-3`}
-              style={{  }}
+              style={{}}
             >
+              {console.log("questionNumber", questionNumber)}
               <Text style={tw`font-bold text-sm`} style={{ color: "#ff5200" }}>
-                {questionNumber+" ) "}
+                {questionNumber + " ) "}
               </Text>
             </View>
             <Text style={tw`text-gray-800 font-medium flex-1`}>
@@ -149,35 +163,56 @@ export default function AuditQuestion({
             ))}
           </View>
 
-          {question.image_capture && (
+          {question.imageRequired && (
             <>
-              <View style={tw`flex-row gap-3 mb-3`}>
+              <View style={tw`flex-row gap-4 my-4`}>
+                {/* Camera Button */}
                 <TouchableOpacity
-                  style={tw`flex-1 rounded-xl p-3 border ${uploading ? "opacity-50" : ""}`}
-                  style={{
-                    backgroundColor: "#ff520020",
-                    borderColor: "#ff5200",
-                  }}
+                  style={[
+                    tw`flex-1 rounded-xl py-4 px-3 items-center justify-center`,
+                    {
+                      backgroundColor: "#ff520020",
+                      borderWidth: 1.5,
+                      borderColor: "#ff5200",
+                      shadowColor: "#000",
+                      shadowOpacity: 0.08,
+                      shadowRadius: 3,
+                      shadowOffset: { width: 0, height: 1 },
+                      opacity: uploading ? 0.6 : 1,
+                    },
+                  ]}
                   onPress={handleCameraCapture}
                   disabled={uploading}
                 >
-                  <Text
-                    style={tw`text-center font-medium`}
-                    style={{ color: "#ff5200" }}
-                  >
-                    {uploading ? "⏳ Uploading..." : "📷 Camera"}
+                  <Text style={[tw`font-semibold text-base`, { color: "#ff5200" }]}>
+                    {uploading ? "⏳ Uploading..." : "Camera"}
                   </Text>
                 </TouchableOpacity>
+
+                {/* Gallery Button */}
                 <TouchableOpacity
-                  style={tw`flex-1 bg-purple-100 rounded-xl p-3 border border-purple-200 ${uploading ? "opacity-50" : ""}`}
+                  style={[
+                    tw`flex-1 rounded-xl py-4 px-3 items-center justify-center`,
+                    {
+                      backgroundColor: "#f9fafb",
+                      borderWidth: 1.5,
+                      borderColor: "#e5e7eb",
+                      shadowColor: "#000",
+                      shadowOpacity: 0.05,
+                      shadowRadius: 3,
+                      shadowOffset: { width: 0, height: 1 },
+                      opacity: uploading ? 0.6 : 1,
+                    },
+                  ]}
                   onPress={handleImagePick}
                   disabled={uploading}
                 >
-                  <Text style={tw`text-purple-700 text-center font-medium`}>
-                    {uploading ? "⏳ Uploading..." : "🖼️ Gallery"}
+                  <Text style={tw`font-semibold text-base text-gray-700`}>
+                    {uploading ? "⏳ Uploading..." : "Gallery"}
                   </Text>
                 </TouchableOpacity>
               </View>
+
 
               {answer?.uri && (
                 <View style={tw`items-center`}>
@@ -241,35 +276,56 @@ export default function AuditQuestion({
             Tap to rate ({fromValue} = Poor, {toValue} = Excellent)
           </Text>
 
-          {question.image_capture && (
+          {question.imageRequired && (
             <>
-              <View style={tw`flex-row gap-3 mb-3 mt-4`}>
+              <View style={tw`flex-row gap-4 my-4`}>
+                {/* Camera Button */}
                 <TouchableOpacity
-                  style={tw`flex-1 rounded-xl p-3 border ${uploading ? "opacity-50" : ""}`}
-                  style={{
-                    backgroundColor: "#ff520020",
-                    borderColor: "#ff5200",
-                  }}
+                  style={[
+                    tw`flex-1 rounded-xl py-4 px-3 items-center justify-center`,
+                    {
+                      backgroundColor: "#ff520020",
+                      borderWidth: 1.5,
+                      borderColor: "#ff5200",
+                      shadowColor: "#000",
+                      shadowOpacity: 0.08,
+                      shadowRadius: 3,
+                      shadowOffset: { width: 0, height: 1 },
+                      opacity: uploading ? 0.6 : 1,
+                    },
+                  ]}
                   onPress={handleCameraCapture}
                   disabled={uploading}
                 >
-                  <Text
-                    style={tw`text-center font-medium`}
-                    style={{ color: "#ff5200" }}
-                  >
-                    {uploading ? "⏳ Uploading..." : "📷 Camera"}
+                  <Text style={[tw`font-semibold text-base`, { color: "#ff5200" }]}>
+                    {uploading ? "⏳ Uploading..." : "Camera"}
                   </Text>
                 </TouchableOpacity>
+
+                {/* Gallery Button */}
                 <TouchableOpacity
-                  style={tw`flex-1 bg-purple-100 rounded-xl p-3 border border-purple-200 ${uploading ? "opacity-50" : ""}`}
+                  style={[
+                    tw`flex-1 rounded-xl py-4 px-3 items-center justify-center`,
+                    {
+                      backgroundColor: "#f9fafb",
+                      borderWidth: 1.5,
+                      borderColor: "#e5e7eb",
+                      shadowColor: "#000",
+                      shadowOpacity: 0.05,
+                      shadowRadius: 3,
+                      shadowOffset: { width: 0, height: 1 },
+                      opacity: uploading ? 0.6 : 1,
+                    },
+                  ]}
                   onPress={handleImagePick}
                   disabled={uploading}
                 >
-                  <Text style={tw`text-purple-700 text-center font-medium`}>
-                    {uploading ? "⏳ Uploading..." : "🖼️ Gallery"}
+                  <Text style={tw`font-semibold text-base text-gray-700`}>
+                    {uploading ? "⏳ Uploading..." : "Gallery"}
                   </Text>
                 </TouchableOpacity>
               </View>
+
 
               {answer?.uri && (
                 <View style={tw`items-center`}>
@@ -318,32 +374,52 @@ export default function AuditQuestion({
             numberOfLines={3}
           />
 
-          {question.image_capture && (
+          {question.imageRequired && (
             <>
-              <View style={tw`flex-row gap-3 mb-3`}>
+              <View style={tw`flex-row gap-4 my-4`}>
+                {/* Camera Button */}
                 <TouchableOpacity
-                  style={tw`flex-1 rounded-xl p-3 border ${uploading ? "opacity-50" : ""}`}
-                  style={{
-                    backgroundColor: "#ff520020",
-                    borderColor: "#ff5200",
-                  }}
+                  style={[
+                    tw`flex-1 rounded-xl py-4 px-3 items-center justify-center`,
+                    {
+                      backgroundColor: "#ff520020",
+                      borderWidth: 1.5,
+                      borderColor: "#ff5200",
+                      shadowColor: "#000",
+                      shadowOpacity: 0.08,
+                      shadowRadius: 3,
+                      shadowOffset: { width: 0, height: 1 },
+                      opacity: uploading ? 0.6 : 1,
+                    },
+                  ]}
                   onPress={handleCameraCapture}
                   disabled={uploading}
                 >
-                  <Text
-                    style={tw`text-center font-medium`}
-                    style={{ color: "#ff5200" }}
-                  >
-                    {uploading ? "⏳ Uploading..." : "📷 Camera"}
+                  <Text style={[tw`font-semibold text-base`, { color: "#ff5200" }]}>
+                    {uploading ? "⏳ Uploading..." : "Camera"}
                   </Text>
                 </TouchableOpacity>
+
+                {/* Gallery Button */}
                 <TouchableOpacity
-                  style={tw`flex-1 bg-purple-100 rounded-xl p-3 border border-purple-200 ${uploading ? "opacity-50" : ""}`}
+                  style={[
+                    tw`flex-1 rounded-xl py-4 px-3 items-center justify-center`,
+                    {
+                      backgroundColor: "#f9fafb",
+                      borderWidth: 1.5,
+                      borderColor: "#e5e7eb",
+                      shadowColor: "#000",
+                      shadowOpacity: 0.05,
+                      shadowRadius: 3,
+                      shadowOffset: { width: 0, height: 1 },
+                      opacity: uploading ? 0.6 : 1,
+                    },
+                  ]}
                   onPress={handleImagePick}
                   disabled={uploading}
                 >
-                  <Text style={tw`text-purple-700 text-center font-medium`}>
-                    {uploading ? "⏳ Uploading..." : "🖼️ Gallery"}
+                  <Text style={tw`font-semibold text-base text-gray-700`}>
+                    {uploading ? "⏳ Uploading..." : "Gallery"}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -393,7 +469,7 @@ export default function AuditQuestion({
               disabled={uploading}
             >
               <Text
-                style={tw`text-center font-medium`}
+                style={tw`text-center font-medium rounded-xl`}
                 style={{ color: "#ff5200" }}
               >
                 {uploading ? "⏳ Uploading..." : "📷 Camera"}
@@ -419,7 +495,7 @@ export default function AuditQuestion({
               />
               <Text style={tw`text-green-600 text-sm mt-2 font-medium`}>
                 {(typeof answer === "object" && answer?.imageUrl) ||
-                (typeof answer === "string" && answer.startsWith("http"))
+                  (typeof answer === "string" && answer.startsWith("http"))
                   ? "Image uploaded ✓"
                   : "Image captured ✓"}
               </Text>

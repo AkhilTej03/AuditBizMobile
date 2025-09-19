@@ -11,6 +11,7 @@ import CompletedAudits from "./components/CompletedAudits";
 // const HOSTNAME = "https://sanatanbackend-r-git-main-zbplus.vercel.app"; // Replace with your actual hostname
 const HOSTNAME = "https://audut-x-backend-nnsm.vercel.app"; // Replace with your actual hostname
 // const HOSTNAME = "https://musical-dollop-xv6pwqr94w9fvv6j-3001.app.github.dev"; // Replace with your actual hostname
+// const HOSTNAME = "https://expert-space-umbrella-7vpqvxppr67phr9w7-3001.app.github.dev"; // Replace with your actual hostname
 
 const dummyPayouts = [
   { id: "1", auditId: "4", amount: 275, status: "Completed" },
@@ -31,13 +32,14 @@ const transformAuditData = (apiAudits) => {
       status: audit.audit.status, // Assuming 'status' field exists
       expectedPayout: audit.audit.category.auditor_payout.medium, // Assuming 'estimatedPayout' from API
       questions:
-        audit.audit.category?.checklist_items?.flatMap((factor) =>
+        audit.audit.category?.checklist_items?.auditor_factors?.flatMap((factor) =>
           (factor?.questions || []).map((q) => ({
             id: q.id,
             text: q.auditor_text || "Untitled Question",
             type: q.type?.toLowerCase?.() || "text",
             importance: q.importance ?? null,
             nonNegotiable: q.nonNegotiable ?? false,
+            imageRequired: q.imageRequired ?? false,
             range: { from: q.from ?? null, to: q.to ?? null },
             options:
               (q.options || []).map((opt) => (opt.text || "")) || [],
