@@ -12,6 +12,7 @@ import * as ImagePicker from "expo-image-picker";
 import tw from "twrnc";
 // import { uploadImageToSupabase } from "../utils/supabase";
 import { uploadImageToS3 } from "../utils/s3Upload";
+import Slider from "@react-native-community/slider";
 
 
 export default function AuditQuestion({
@@ -21,8 +22,9 @@ export default function AuditQuestion({
   questionNumber,
 }) {
   const [uploading, setUploading] = React.useState(false);
+  const [uploaded, setUploaded] = React.useState(false);
 
-  console.log(question);
+  console.log(question, "question");
 
   const handleImagePick = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -85,12 +87,16 @@ export default function AuditQuestion({
         // console.log("S3 fallback upload successful");
       }
 
-      if (question.image_capture) {
+      console.log("question.image_capture", question.imageRequired);
+
+      if (question.imageRequired) {
         setAnswer({
           ...answer,
           imageUrl: imageUrl,
           uri: imageUri, // Keep local URI for preview
         });
+        setUploaded(true);
+        console.log("Answer updated:", imageUrl);
       } else {
         setAnswer(imageUrl);
       }
@@ -118,7 +124,7 @@ export default function AuditQuestion({
   };
 
   const setValue = (value) => {
-    if (question.image_capture) {
+    if (question.imageRequired) {
       setAnswer({ ...answer, value: value });
     } else {
       setAnswer(value);
@@ -211,7 +217,9 @@ export default function AuditQuestion({
                     {uploading ? "⏳ Uploading..." : "Gallery"}
                   </Text>
                 </TouchableOpacity>
+
               </View>
+
 
 
               {answer?.uri && (
@@ -232,8 +240,8 @@ export default function AuditQuestion({
       );
 
     case "rating":
-      const fromValue = question.from || 1;
-      const toValue = question.to || 5;
+      const fromValue = question?.range?.from || 1;
+      const toValue = question?.range?.to || 5;
       const ratingOptions = [];
       for (let i = fromValue; i <= toValue; i++) {
         ratingOptions.push(i);
@@ -257,20 +265,22 @@ export default function AuditQuestion({
             </Text>
             {isAnswered && <Text style={tw`text-green-500 text-lg`}>✓</Text>}
           </View>
-          <View style={tw`flex-row justify-between items-center flex-wrap`}>
-            {ratingOptions.map((rating) => (
-              <TouchableOpacity
-                key={rating}
-                style={tw`rounded-full w-12 h-12 items-center justify-center border-2 mb-2 ${getValue() == rating ? "bg-yellow-100 border-yellow-500" : "bg-gray-50 border-gray-200"}`}
-                onPress={() => setValue(rating)}
-              >
-                <Text
-                  style={tw`font-bold ${getValue() == rating ? "text-yellow-700" : "text-gray-700"}`}
-                >
-                  {rating}
-                </Text>
-              </TouchableOpacity>
-            ))}
+          <View style={tw`mb-4`}>
+            <Text style={tw`mb-2 font-semibold text-gray-700`}>
+              Rating: {getValue()}
+            </Text>
+
+            <Slider
+              style={{ width: "100%", height: 40 }}
+              minimumValue={fromValue}
+              maximumValue={toValue}
+              step={1} // makes it snap to whole numbers
+              value={getValue()}
+              onValueChange={(val) => setValue(val)}
+              minimumTrackTintColor="#facc15"   // yellow-400
+              maximumTrackTintColor="#e5e7eb"   // gray-200
+              thumbTintColor="#f59e0b"          // yellow-500
+            />
           </View>
           <Text style={tw`text-center text-gray-500 text-xs mt-2`}>
             Tap to rate ({fromValue} = Poor, {toValue} = Excellent)
@@ -324,6 +334,8 @@ export default function AuditQuestion({
                     {uploading ? "⏳ Uploading..." : "Gallery"}
                   </Text>
                 </TouchableOpacity>
+
+
               </View>
 
 
@@ -422,6 +434,8 @@ export default function AuditQuestion({
                     {uploading ? "⏳ Uploading..." : "Gallery"}
                   </Text>
                 </TouchableOpacity>
+
+
               </View>
 
               {answer?.uri && (

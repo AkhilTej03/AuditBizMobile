@@ -9,9 +9,9 @@ import CompletedAudits from "./components/CompletedAudits";
 
 // Define HOSTNAME here, or import it from a config file
 // const HOSTNAME = "https://sanatanbackend-r-git-main-zbplus.vercel.app"; // Replace with your actual hostname
-const HOSTNAME = "https://audut-x-backend-nnsm.vercel.app"; // Replace with your actual hostname
+// const HOSTNAME = "https://audut-x-backend-nnsm.vercel.app"; // Replace with your actual hostname
 // const HOSTNAME = "https://musical-dollop-xv6pwqr94w9fvv6j-3001.app.github.dev"; // Replace with your actual hostname
-// const HOSTNAME = "https://expert-space-umbrella-7vpqvxppr67phr9w7-3001.app.github.dev"; // Replace with your actual hostname
+const HOSTNAME = "https://expert-space-umbrella-7vpqvxppr67phr9w7-3001.app.github.dev"; // Replace with your actual hostname
 
 const dummyPayouts = [
   { id: "1", auditId: "4", amount: 275, status: "Completed" },
