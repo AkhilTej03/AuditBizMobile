@@ -94,7 +94,7 @@ export default function LoginScreen({ onLogin }) {
 
             {/* Brand Text */}
             <Text style={tw`text-gray-900 text-4xl font-black tracking-tight text-center mb-2`}>
-              Swasti Parivartan
+              SanatanSeal Samikshak
             </Text>
 
             <Text style={tw`text-gray-500 text-center text-base font-medium`}>
