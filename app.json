@@ -14,9 +14,11 @@
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "UIBackgroundModes": ["fetch", "remote-notification"],
-        "NSCameraUsageDescription": "We use the camera to scan Sanatan Seal QR codes to verify authenticity and certification validity.",
-        "NSPhotoLibraryUsageDescription": "Allow choosing photos to attach as evidence for Cleanliness & Hygiene practices.",
-        "NSPhotoLibraryAddUsageDescription": "Allow saving photos and certificates to your library."
+        "NSCameraUsageDescription": "We use the camera to capture Images that users can upload to our servers explicitly when submitting their audit reports.",
+        "NSPhotoLibraryUsageDescription": "Allow choosing photos to attach as evidence for Cleanliness & Hygiene practices during auditing process.",
+        "NSPhotoLibraryAddUsageDescription": "Allow saving photos and certificates to your library.",
+        "NSLocationWhenInUseUsageDescription": "We use your location to provide personalized experiences based on your current location, such as showing nearby places and services. Capturing location to record where the audit process is happening.",
+        "NSLocationAlwaysUsageDescription": "We use your location in the background to provide continuous services, such as tracking your activity or showing real-time location-based updates."
       },
       "runtimeVersion": {
         "policy": "appVersion"
