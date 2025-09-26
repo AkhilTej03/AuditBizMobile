@@ -5,6 +5,7 @@
 eas build -p android -e preview
 
 keytool -genkey -v -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -storepass 03184b046ee6c45286eedf2477e3a0a2 -keypass e7563d29cd13ba9d97e81aae513bda07 -alias 218a5b39aef5d2cfccc32adf11dfa290 -keystore release.keystore -dname "CN=com.vc1.sanatanaudits,OU=,O=,L=,S=,C=US"
+keytool -genkey -v -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -storepass 03184b046ee6c45286eedf2477e3a0a2 -keypass e7563d29cd13ba9d97e81aae513bda07 -alias 218a5b39aef5d2cfccc32adf11dfa290 -keystore release.keystore -dname "CN=com.shree_bhandary.swastiaudits,OU=,O=,L=,S=,C=US"
 
 {
   "android": {
@@ -19,7 +20,15 @@ keytool -genkey -v -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -sto
 
 
 Old
+keytool -genkey -v -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -storepass KEYSTORE_PASSWORD -keypass KEY_PASSWORD -alias KEY_ALIAS -keystore release.keystore -dname "CN=com.expo.your.android.package,OU=,O=,L=,S=,C=US"
+com.shree_bhandary.swastiaudits
+com.vc1.swastiaudits
 
+
+
+
+
+keytool -genkey -v -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -storepass 2415660c362b3cc8217510c9a9bbdcd6 -keypass 5e09a8004a2a17fd40657156aab07623 -alias d1f03bd7a59745edf64eff172e227c08 -keystore release.keystore -dname "CN=com.vc1.sanatanaudits,OU=,O=,L=,S=,C=US"
 {
   "android": {
     "keystore": {

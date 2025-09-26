@@ -9,7 +9,18 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sanatanseal.samikshak",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIBackgroundModes": ["fetch", "remote-notification"],
+        "NSCameraUsageDescription": "We use the camera to scan Sanatan Seal QR codes to verify authenticity and certification validity.",
+        "NSPhotoLibraryUsageDescription": "Allow choosing photos to attach as evidence for Cleanliness & Hygiene practices.",
+        "NSPhotoLibraryAddUsageDescription": "Allow saving photos and certificates to your library."
+      },
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "android": {
       "adaptiveIcon": {
