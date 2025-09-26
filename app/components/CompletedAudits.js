@@ -269,7 +269,7 @@ export default function CompletedAudits({ audits, onSelectAudit, onNavigate, onL
               </Text>
             </TouchableOpacity>
             
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={tw`bg-emerald-600 rounded-2xl p-4 flex-1 items-center`}
               onPress={() => onNavigate("payouts")}
               activeOpacity={0.8}
@@ -278,7 +278,7 @@ export default function CompletedAudits({ audits, onSelectAudit, onNavigate, onL
               <Text style={tw`text-white font-semibold text-sm`}>
                 Earnings
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </View>

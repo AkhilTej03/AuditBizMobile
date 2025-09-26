@@ -6,11 +6,14 @@ import AuditList from "./components/AuditList";
 import AuditDetail from "./components/AuditDetail";
 import PayoutScreen from "./components/PayoutScreen";
 import CompletedAudits from "./components/CompletedAudits";
+import * as Location from "expo-location";
+
 
 // Define HOSTNAME here, or import it from a config file
 // const HOSTNAME = "https://sanatanbackend-r-git-main-zbplus.vercel.app"; // Replace with your actual hostname
 const HOSTNAME = "https://audut-x-backend-nnsm.vercel.app"; // Replace with your actual hostname
 // const HOSTNAME = "https://musical-dollop-xv6pwqr94w9fvv6j-3001.app.github.dev"; // Replace with your actual hostname
+// const HOSTNAME = "https://1tqgljlm-3001.inc1.devtunnels.ms"; // Replace with your actual hostname
 
 const dummyPayouts = [
   { id: "1", auditId: "4", amount: 275, status: "Completed" },
@@ -19,6 +22,8 @@ const dummyPayouts = [
   { id: "4", auditId: "1", amount: 250, status: "Pending" },
   { id: "5", auditId: "2", amount: 400, status: "Pending" },
 ];
+
+
 
 // Helper function to transform API data to the expected format
 const transformAuditData = (apiAudits) => {
@@ -31,13 +36,14 @@ const transformAuditData = (apiAudits) => {
       status: audit.audit.status, // Assuming 'status' field exists
       expectedPayout: audit.audit.category.auditor_payout.medium, // Assuming 'estimatedPayout' from API
       questions:
-        audit.audit.category?.checklist_items?.flatMap((factor) =>
+        audit.audit.category?.checklist_items?.auditor_factors?.flatMap((factor) =>
           (factor?.questions || []).map((q) => ({
             id: q.id,
             text: q.auditor_text || "Untitled Question",
             type: q.type?.toLowerCase?.() || "text",
             importance: q.importance ?? null,
             nonNegotiable: q.nonNegotiable ?? false,
+            imageRequired: q.imageRequired ?? false,
             range: { from: q.from ?? null, to: q.to ?? null },
             options:
               (q.options || []).map((opt) => (opt.text || "")) || [],
@@ -54,10 +60,31 @@ export default function App() {
   const [authToken, setAuthToken] = useState(null);
   const [currentScreen, setCurrentScreen] = useState("audits");
   const [selectedAudit, setSelectedAudit] = useState(null);
+  const [comments, setComments] = useState("");
+  
+    const [suggestions, setSuggestions] = useState("");
+
   const [answers, setAnswers] = useState({});
   const [audits, setAudits] = useState([]);
   const [userSamikshakId, setUserSamikshakId] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const getLocationAndSend = async () => {
+    // Ask for permission
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Permission denied", "Location access is required.");
+      return;
+    }
+
+    // Get current position
+    let location = await Location.getCurrentPositionAsync({});
+    
+    // Send location to the backend
+    console.log("Sending location to backend:", location.coords);
+    return location.coords
+    // sendLocation(location.coords.latitude, location.coords.longitude);
+  };
 
   const fetchAudits = async (samikshakId) => {
     try {
@@ -88,7 +115,7 @@ export default function App() {
     }
   };
 
-  const submitAuditReport = async (auditId, responses) => {
+  const submitAuditReport = async (auditId, responses,locationCoords) => {
     try {
       setLoading(true);
       const formattedResponses = responses.map((response) => ({
@@ -109,7 +136,7 @@ export default function App() {
             "Content-Type": "application/json",
             // Authorization: `Bearer ${authToken}`, // Assuming token is needed for submission
           },
-          body: JSON.stringify({ responses: formattedResponses }),
+          body: JSON.stringify({ responses: formattedResponses,comments,suggestions,locationCoords }),
         },
       );
 
@@ -249,11 +276,15 @@ export default function App() {
           };
         });
         console.log("Formatted answers:", formattedAnswers);
-        const success = await submitAuditReport(auditId, formattedAnswers);
+        const locationCoords = await getLocationAndSend();
+        console.log("Location coordinates:", locationCoords);
+        const success = await submitAuditReport(auditId, formattedAnswers,locationCoords);
 
         if (success) {
           setAnswers({});
           setSelectedAudit(null);
+          setComments("");// Clear comments
+          setSuggestions("");// Clear suggestions
           setCurrentScreen("audits");
           // Refresh audits after successful submission
           if (userSamikshakId) {
@@ -286,6 +317,10 @@ export default function App() {
       <AuditDetail
         audit={selectedAudit}
         answers={answers}
+        comments={comments}
+        suggestions={suggestions}
+        setComments={setComments}
+        setSuggestions={setSuggestions}
         setAnswers={setAnswers}
         onBack={() => setSelectedAudit(null)}
         onSubmit={handleAuditSubmit}

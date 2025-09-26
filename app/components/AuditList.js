@@ -77,7 +77,7 @@ export default function AuditList({ audits, onSelectAudit, onNavigate, onLogout,
           </View>
           
           {/* Earnings Card */}
-          <View style={tw`bg-white bg-opacity-15 backdrop-blur-lg rounded-3xl p-6 border border-white border-opacity-20`}>
+          {/* <View style={tw`bg-white bg-opacity-15 backdrop-blur-lg rounded-3xl p-6 border border-white border-opacity-20`}>
             <Text style={tw`text-orange-600 text-sm font-medium mb-2`}>
               Total Potential Earnings
             </Text>
@@ -90,7 +90,7 @@ export default function AuditList({ audits, onSelectAudit, onNavigate, onLogout,
                 Ready to claim
               </Text>
             </View>
-          </View>
+          </View> */}
         </View>
       </View>
 
@@ -230,7 +230,7 @@ export default function AuditList({ audits, onSelectAudit, onNavigate, onLogout,
               </Text>
             </TouchableOpacity>
             
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={tw`bg-emerald-600 rounded-2xl p-4 flex-1 items-center`}
               onPress={() => onNavigate("payouts")}
               activeOpacity={0.8}
@@ -239,7 +239,7 @@ export default function AuditList({ audits, onSelectAudit, onNavigate, onLogout,
               <Text style={tw`text-white font-semibold text-sm`}>
                 Earnings
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </View>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Modal, Alert } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Modal, Alert, TextInput } from "react-native";
 import tw from "twrnc";
 import AuditQuestion from "./AuditQuestion";
 import ConfirmModal from "./ConfirmModal";
@@ -28,9 +28,14 @@ export default function AuditDetail({
   setAnswers,
   onBack,
   onSubmit,
+  comments,
+  setComments,
+  suggestions,
+  setSuggestions
 }) {
   const [auditStarted, setAuditStarted] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   const handleStartAudit = () => {
@@ -174,9 +179,12 @@ export default function AuditDetail({
               ))}
             </View>
           </View>
+          {console.log(audit.id)}
 
           {/* Questions */}
-          {audit.questions.map((question, index) => (
+          {audit.questions.map((question, index) => {
+            
+            return(
             <AuditQuestion
               key={question.id}
               question={question}
@@ -186,7 +194,32 @@ export default function AuditDetail({
               }
               questionNumber={index + 1}
             />
-          ))}
+
+
+          )})}
+          
+          {/* Comments */}
+          <Text style={tw`text-gray-500 text-sm my-2`}>Comments</Text>
+          <TextInput
+            style={tw`border border-gray-200 rounded-xl p-3 bg-gray-50 text-gray-800 mb-3`}
+            placeholder="Enter your response..."
+            placeholderTextColor="#6B7280"
+            value={comments}
+            onChangeText={setComments}
+            multiline={true}
+            numberOfLines={3}
+          />
+
+          <Text style={tw`text-gray-500 text-sm my-2`}>Suggestions</Text>
+          <TextInput
+            style={tw`border border-gray-200 rounded-xl p-3 bg-gray-50 text-gray-800 mb-3`}
+            placeholder="Enter your response..."
+            placeholderTextColor="#6B7280"
+            value={suggestions}
+            onChangeText={setSuggestions}
+            multiline={true}
+            numberOfLines={3}
+          />
           
           {/* Submit Button */}
           <View style={tw`mt-6 mb-32`}>
@@ -203,12 +236,12 @@ export default function AuditDetail({
                 <Text style={tw`text-white font-black text-xl mb-2`}>
                   {answeredQuestions < totalQuestions ? '🔒 Complete All Questions' : ' Submit Audit'}
                 </Text>
-                <Text style={tw`text-white font-medium text-sm`}>
+                {/* <Text style={tw`text-white font-medium text-sm`}>
                   {answeredQuestions < totalQuestions 
                     ? `${totalQuestions - answeredQuestions} questions remaining`
                     : `Earn ₹${audit.expectedPayout.toLocaleString()}`
                   }
-                </Text>
+                </Text> */}
               </View>
             </TouchableOpacity>
           </View>
@@ -334,8 +367,8 @@ export default function AuditDetail({
             activeOpacity={0.9}
           >
             <View style={tw`items-center`}>
-              <Text style={tw`text-black font-black text-xl mb-2`}>
-                🚀 Start Audit
+              <Text style={tw`text-white bg-orange-600 px-3 py-1 rounded-full font-black text-xl mb-2`}>
+                 Start Audit
               </Text>
               <Text style={tw`text-orange-600 font-medium text-sm`}>
                 Tap when you're ready at the location
