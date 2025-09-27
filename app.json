@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "Swasti-Parivartan-Audits",
+    "name": "SanatanSeal Samikshak",
     "slug": "sanatan-audits",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/ss11.png",
+    "icon": "./assets/images/ssnew.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -26,7 +26,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/ss11.png",
+        "foregroundImage": "./assets/images/ssnew.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
@@ -35,7 +35,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/ssnew.png"
     },
     "plugins": [
       "expo-router",
