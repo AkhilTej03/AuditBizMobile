@@ -4,6 +4,9 @@
 npx expo install --check
 eas build -p android -e preview
 
+npx expo start --tunnel
+
+8081 public 
 keytool -genkey -v -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -storepass 03184b046ee6c45286eedf2477e3a0a2 -keypass e7563d29cd13ba9d97e81aae513bda07 -alias 218a5b39aef5d2cfccc32adf11dfa290 -keystore release.keystore -dname "CN=com.vc1.sanatanaudits,OU=,O=,L=,S=,C=US"
 keytool -genkey -v -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -storepass 03184b046ee6c45286eedf2477e3a0a2 -keypass e7563d29cd13ba9d97e81aae513bda07 -alias 218a5b39aef5d2cfccc32adf11dfa290 -keystore release.keystore -dname "CN=com.shree_bhandary.swastiaudits,OU=,O=,L=,S=,C=US"
 

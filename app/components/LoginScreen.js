@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import {
   View,
-  Text,
-  TextInput,
+  Text, Image,
+  TextInput, Dimensions,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
@@ -17,7 +17,7 @@ export default function LoginScreen({ onLogin }) {
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [errors, setErrors] = useState({});
-
+  const { width } = Dimensions.get('window');
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -86,13 +86,17 @@ export default function LoginScreen({ onLogin }) {
       >
         <View style={tw`px-6 py-8`}>
           {/* Header Section */}
-          <View style={tw`items-center mb-12`}>
-            {/* Logo Container */}
-            <View style={tw`bg-orange-600 rounded-3xl p-6 mb-6 shadow-lg shadow-orange-600 shadow-opacity-20`}>
-              <Text style={tw`text-white text-4xl`}>🏥</Text>
-            </View>
+          <View style={tw`items-center mb-6`}>
+              <Image
+                source={require('../../assets/images/ss1c.png')}
+                style={{ width: width*0.3, height: width*0.3,
+                        maxWidth: 250,
+                        maxHeight: 250,
+                 }} // Adjust size as needed
+                
+                // resizeMode="contain"
+              />
 
-            {/* Brand Text */}
             <Text style={tw`text-gray-900 text-4xl font-black tracking-tight text-center mb-2`}>
               SanatanSeal Samikshak
             </Text>
